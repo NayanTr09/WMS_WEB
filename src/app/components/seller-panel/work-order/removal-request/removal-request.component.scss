@@ -1,0 +1,71 @@
+@import '../../../../../assets/scss/main.scss';
+
+$color1: #eaf0fd;
+
+.defaultColor {
+  color: $color1;
+}
+
+.locationCard {
+  min-width: 7.5rem;
+}
+
+.active {
+  border-color: $voilet !important;
+  color: $voilet;
+
+  & .defaultColor {
+    color: $voilet;
+  }
+
+  & .fcBtnIcon {
+    color: $light-green;
+  }
+}
+
+.fcBtnIcon {
+  right: 0.3rem;
+  color: $light-grey;
+}
+
+.fcHomeIcon {
+  zoom: 1.8;
+}
+
+.table-container {
+  overflow: auto;
+  max-height: 25rem;
+}
+
+.inventoryTable {
+  & .mat-cell {
+    @extend .p-sm;
+    color: var(--gray);
+  }
+
+  & .mat-header-cell {
+    font-weight: bold;
+    color: black;
+  }
+
+  & .mat-cell:first-of-type {
+    text-align: center;
+  }
+
+  & .mat-header-cell:first-of-type,
+  & .mat-header-cell:last-of-type {
+    padding-left: unset;
+    width: 5rem;
+    text-align: center;
+  }
+
+  & tr:last-child {
+    td {
+      border-bottom-color: transparent;
+    }
+  }
+
+  .fixInput {
+    width: 5rem;
+  }
+}

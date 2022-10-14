@@ -1,0 +1,354 @@
+<div
+  fxFill
+  class="filter"
+  fxLayoutAlign="center center"
+  [formGroup]="filterForm"
+>
+  <div *ngIf="mainFilter.length" class="filter-label">
+    <button
+      mat-button
+      [matMenuTriggerFor]="menu2"
+      [disabled]="mainFilter.length == 1"
+      [ngClass]="{ 'disable-menu': mainFilter.length == 1 }"
+      class="search-dd"
+    >
+      {{ mFilterName.label
+      }}<mat-icon *ngIf="mainFilter.length > 1" class="search-section-icon mr-1"
+        >expand_more</mat-icon
+      >
+    </button>
+    <mat-menu #menu2="matMenu" xPosition="after" class="menu2">
+      <button
+        *ngFor="let mf of mainFilter"
+        mat-menu-item
+        (click)="setMainFilter(filter_information[mf], mf)"
+      >
+        <span>{{ filter_information[mf].label }}</span>
+      </button>
+    </mat-menu>
+  </div>
+  <div
+    fxFlex="100"
+    class="multi-search pl-xs pr-xs"
+    fxFill
+    fxLayoutAlign="center center"
+    *ngIf="mainFilter.length"
+  >
+    <mat-icon class="text-muted search-section-icon mr-3">search</mat-icon>
+    <input
+      matInput
+      class="p-xs"
+      type="text"
+      [formControl]="filterForm.controls[mFilterName.name]"
+      (keyup.enter)="setFilters()"
+      (keyup)="isTabOpen = true"
+      formControlName="{{ mFilterName.name }}"
+      placeholder="{{ mFilterName.placeholder }}"
+      appValidator="html"
+    />
+  </div>
+  <div class="col pr-0">
+    <button
+      class="filters-dd"
+      mat-button
+      (click)="parentMatTab()"
+      [matMenuTriggerFor]="filters"
+    >
+      Filters
+    </button>
+    <mat-menu
+      #filters="matMenu"
+      xPosition="after"
+      (click)="$event.stopPropagation(); $event.preventDefault()"
+    >
+      <div class="container filter-dd">
+        <div class="row">
+          <h4 class="pr-sm pl-sm block fluid pb-xs bdr-b-g">Filters</h4>
+        </div>
+        <div *ngFor="let filter of filter_array">
+          <div
+            formGroupName="date_range"
+            *ngIf="filter_information[filter].type == 'date_range'"
+            #dateMenuTrigger="matMenuTrigger"
+            [matMenuTriggerFor]="dateMenu"
+            (click)="$event.stopPropagation()"
+          >
+            <label>{{ filter_information[filter].label }}</label>
+            <div
+              class="form-control"
+              fxFill
+              fxLayoutAlign="space-between center"
+            >
+              <mat-date-range-input [rangePicker]="picker">
+                <input
+                  matStartDate
+                  formControlName="start"
+                  errorState="true"
+                  placeholder="Start date"
+                />
+                <input
+                  matEndDate
+                  formControlName="end"
+                  placeholder="End date"
+                />
+              </mat-date-range-input>
+
+              <mat-datepicker-toggle
+                matSuffix
+                disabled
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </div>
+          </div>
+
+          <ng-container *ngIf="filter_information[filter] as switchFilter">
+            <div
+              *ngIf="switchFilter.type === 'switch'"
+              class="mb-2 d-flex justify-content-between align-items-center"
+              (click)="$event.stopPropagation()"
+            >
+              <label class="mb-0">{{ switchFilter.label }}</label>
+              <div class="custom-control custom-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  [id]="switchFilter.name"
+                  formControlName="{{ filter }}"
+                />
+                <label
+                  class="custom-control-label pointer"
+                  [for]="switchFilter.name"
+                  style="transform: scale(1.2)"
+                ></label>
+              </div>
+            </div>
+          </ng-container>
+          <!-- ----------single date picker---------- -->
+          <div
+            *ngIf="filter_information[filter].type == 'date'"
+            (click)="$event.stopPropagation()"
+            formGroupName="date"
+            class="single_date_picker"
+          >
+            <label>{{ filter_information[filter].label }}</label>
+            <mat-form-field class="form-control" appearance="none">
+              <input
+                matInput
+                [matDatepicker]="picker"
+                [max]="today"
+                formControlName="cut_off_date"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <!-- -------------------------------------- -->
+
+          <div
+            *ngIf="filter_information[filter].type == 'select'"
+            (click)="$event.stopPropagation()"
+          >
+            <label>{{ filter_information[filter].label }}</label>
+            <mat-select
+              placeholder="{{ filter_information[filter].placeholder }}"
+              panelClass="filter-select"
+              class="form-control resizeFont"
+              formControlName="{{ filter }}"
+              [multiple]="filter_information[filter].multiple"
+              (selectionChange)="checkForNone(filter, $event)"
+            >
+              <mat-select-trigger *ngIf="filter_information[filter].multiple">
+                {{ selectTriggerValue(filter) | titlecase }}
+                <span
+                  *ngIf="filterForm.get(filter).value?.length > 1"
+                  class="example-additional-selection"
+                >
+                  (+{{ filterForm.get(filter).value.length - 1 }}
+                  {{
+                    filterForm.get(filter).value?.length === 2
+                      ? 'other'
+                      : 'others'
+                  }})
+                </span>
+              </mat-select-trigger>
+
+              <mat-option
+                *ngIf="!filter_information[filter].isDefault"
+                [value]="{ name: 'none', value: '' }"
+                >{{
+                  filter_information[filter].label.includes('OnHold')
+                    ? 'No Reason'
+                    : 'None'
+                }}</mat-option
+              >
+              <mat-option
+                *ngIf="filter_information[filter].hasSelectAll"
+                [value]="{ name: 'all', value: 'all' }"
+                (click)="onClickSelectAll(filter)"
+                >{{
+                  isAllSelected(filter) ? 'Unselect All' : 'Select All'
+                }}</mat-option
+              >
+              <mat-option
+                *ngFor="let option of filter_information[filter].data"
+                [value]="option"
+                [disabled]="option.is_disabled"
+              >
+                {{
+                  option.case === 'uppercase'
+                    ? (option.name | uppercase)
+                    : option.case === 'lowercase'
+                    ? (option.name | lowercase)
+                    : (option.name | titlecase)
+                }}
+              </mat-option>
+            </mat-select>
+          </div>
+
+          <mat-form-field
+            *ngIf="
+              filter_information[filter].type == 'input' &&
+              filter_information[filter].main_filter != 1
+            "
+          >
+            <mat-label>{{ filter_information[filter].label }}</mat-label>
+            <input
+              formControlName="{{ filter }}"
+              type="text"
+              class="form-control"
+              id="filter"
+              placeholder="filter"
+              appValidator="html"
+            />
+          </mat-form-field>
+        </div>
+        <button
+          (click)="setFilters()"
+          class="btn btn-sm mat-button btn-purple text-white"
+        >
+          APPLY
+        </button>
+      </div>
+    </mat-menu>
+
+    <mat-menu #dateMenu="matMenu" yPosition="above" class="date-menu">
+      <button
+        mat-menu-item
+        [ngClass]="{
+          'date-active': dateActive === 'all',
+          'date-deactive': dateActive !== 'all'
+        }"
+        (click)="setDate($event, 'all')"
+      >
+        <span>All</span>
+      </button>
+      <button
+        mat-menu-item
+        [ngClass]="{
+          'date-active': dateActive === 'today',
+          'date-deactive': dateActive !== 'today'
+        }"
+        (click)="setDate($event, 'today')"
+      >
+        <span>Today</span>
+      </button>
+      <button
+        mat-menu-item
+        [ngClass]="{
+          'date-active': dateActive === 'Yesterday',
+          'date-deactive': dateActive !== 'Yesterday'
+        }"
+        (click)="setDate($event, 'Yesterday')"
+      >
+        <span>Yesterday</span>
+      </button>
+      <button
+        mat-menu-item
+        [ngClass]="{
+          'date-active': dateActive === 'last_7days',
+          'date-deactive': dateActive !== 'last_7days'
+        }"
+        (click)="setDate($event, 'last_7days')"
+      >
+        <span>Last 7 Days</span>
+      </button>
+      <button
+        mat-menu-item
+        [ngClass]="{
+          'date-active': dateActive === 'last_30days',
+          'date-deactive': dateActive !== 'last_30days'
+        }"
+        (click)="setDate($event, 'last_30days')"
+      >
+        <span>Last 30 Days</span>
+      </button>
+      <button
+        mat-menu-item
+        [ngClass]="{
+          'date-active': dateActive === 'this_month',
+          'date-deactive': dateActive !== 'this_month'
+        }"
+        (click)="setDate($event, 'this_month')"
+      >
+        <span>This Month</span>
+      </button>
+      <button
+        mat-menu-item
+        [ngClass]="{
+          'date-active': dateActive === 'last_month',
+          'date-deactive': dateActive !== 'last_month'
+        }"
+        (click)="setDate($event, 'last_month')"
+      >
+        <span>Last Month</span>
+      </button>
+      <button
+        *ngIf="isLocationOnHold"
+        mat-menu-item
+        [ngClass]="{
+          'date-active': dateActive === 'last_3months',
+          'date-deactive': dateActive !== 'last_3months'
+        }"
+        (click)="setDate($event, 'last_3months')"
+      >
+        <span>Last 3 Months</span>
+      </button>
+      <button
+        mat-menu-item
+        [ngClass]="{
+          'date-active': dateActive === 'custom_range',
+          'date-deactive': dateActive !== 'custom_range'
+        }"
+        (click)="setDate($event, 'custom_range')"
+      >
+        <span>Custom Range</span>
+      </button>
+    </mat-menu>
+  </div>
+</div>
+<!-- <pre>{{ filterForm.value | json }}</pre> -->
+<div>
+  <!-- <mat-chip-list aria-label="Fish selection">
+		<mat-chip [removable]="removable" *ngFor="tag of tagList">{{tag}}</mat-chip>                  
+</mat-chip-list> -->
+  <div class="mt-3 filter-chip">
+    <mat-chip-list #chipList aria-label="Filters Selection">
+      <ng-container *ngFor="let tag of tagList">
+        <mat-chip
+          *ngIf="tag"
+          class="filter_chip"
+          [selectable]="selectable"
+          [removable]="tag.is_removeable"
+          (removed)="remove(tag)"
+        >
+          {{ tag.name }}
+          <mat-icon matChipRemove *ngIf="tag.is_removeable">cancel</mat-icon>
+        </mat-chip>
+      </ng-container>
+    </mat-chip-list>
+  </div>
+</div>

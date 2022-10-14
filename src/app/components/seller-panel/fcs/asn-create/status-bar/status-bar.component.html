@@ -1,0 +1,17 @@
+<ul class="timeline">
+  <li
+    class="li"
+    *ngFor="let step of steps; let i = index"
+    [ngClass]="{ complete: i < position }"
+  >
+    <div class="timestamp position-relative">
+      <p
+        class="text-capitalize text-muted"
+        [ngClass]="{ 'text-purple': i < position }"
+      >
+        {{ step }}
+      </p>
+    </div>
+    <div class="status"></div>
+  </li>
+</ul>

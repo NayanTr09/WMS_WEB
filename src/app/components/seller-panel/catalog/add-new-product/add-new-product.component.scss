@@ -1,0 +1,48 @@
+@import '../../../../../assets/scss/main.scss';
+
+.input-grp-lg {
+  padding: 1rem;
+  //   font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.3rem;
+}
+
+.custom-file-label::after {
+  background-color: $voilet;
+  color: white;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.list-custom {
+  list-style-type: decimal !important;
+  color: var(--secondary);
+  margin-bottom: 0.5rem;
+}
+
+.badge-custom {
+  padding: 5px 10px;
+}
+
+.btn-upload {
+  &:hover {
+    // background-color: white !important;
+  }
+
+  @extend .br-6;
+  border: 1px dashed $light-grey;
+  width: 75%;
+  height: 75%;
+}
+
+@media screen and (max-width: 768px) {
+  .tab {
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .mob {
+    width: 100% !important;
+  }
+}

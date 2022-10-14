@@ -1,0 +1,44 @@
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <span class="icon-support tb-icon" hidden></span>
+  <span
+    class="icon-bell tb-icon"
+    hidden
+    matBadge="15"
+    matBadgeColor="warn"
+  ></span>
+  <button mat-icon-button class="apps-widget" [matMenuTriggerFor]="appWidget">
+    <mat-icon svgIcon="assets:widget"></mat-icon>
+  </button>
+  <button mat-button [matMenuTriggerFor]="userProfile">
+    <mat-icon class="profile-icon">account_circle</mat-icon>
+    <span class="font-weight-bold ml-2 user-profile">{{
+      this.userData['first_name']
+    }}</span>
+    <mat-icon class="down-arrow text-muted ml-2 user-profile"
+      >keyboard_arrow_down</mat-icon
+    >
+  </button>
+</div>
+
+<mat-menu #userProfile class="menu-dropdown">
+  <button
+    mat-menu-item
+    class="text-center font-weight-bold text-muted d-block d-sm-none"
+  >
+    {{ this.userData['first_name'] | titlecase }}
+  </button>
+  <button mat-menu-item hidden>
+    <span class="icon-dashboard"></span> Account Settings
+  </button>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon class="mr-1">logout</mat-icon>
+    Logout
+  </button>
+</mat-menu>
+
+<mat-menu #appWidget class="menu-dropdown">
+  <button mat-menu-item (click)="redirectToPage()">
+    <mat-icon class="mr-2" svgIcon="assets:logosm"></mat-icon>
+    <span><strong>Shiprocket</strong></span>
+  </button>
+</mat-menu>

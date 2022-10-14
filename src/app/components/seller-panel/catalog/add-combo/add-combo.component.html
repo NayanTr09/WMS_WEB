@@ -1,0 +1,285 @@
+<app-my-loader></app-my-loader>
+<ng-container [ngTemplateOutlet]="step === 1 ? step1 : null"></ng-container>
+<ng-container [ngTemplateOutlet]="step === 2 ? step2 : null"></ng-container>
+<ng-container [ngTemplateOutlet]="step === 3 ? step3 : null"></ng-container>
+
+<ng-template #step1>
+  <div class="pl-sm pr-sm mb-4 d-flex align-items-center">
+    <button
+      mat-ripple
+      class="px-2 py-1 border border-primary bg-white d-flex align-items-center rounded mr-3"
+      (click)="goBack()"
+    >
+      <mat-icon class="text-purple">arrow_back</mat-icon>
+    </button>
+
+    <div>
+      <h1 class="mb-0">Add combo</h1>
+      <p class="text-muted mb-0">
+        Step 1 - Select combo SKU (You can only select one SKU)
+      </p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="w-75 tab mob mx-auto bdr-g br-10 p-4">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Search and add products</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="search"
+          #productSearch
+          [matAutocomplete]="pAutocomplete"
+          [formControl]="parentAutocomplete"
+          (input)="searchProductParent($event)"
+        />
+        <mat-autocomplete
+          #pAutocomplete="matAutocomplete"
+          [displayWith]="formatParentValue.bind(this)"
+        >
+          <ng-template #productLoading>
+            <mat-option
+              *ngIf="productSearch.value.length > 2"
+              class="is-loading"
+              >Loading...</mat-option
+            >
+          </ng-template>
+
+          <ng-container
+            *ngIf="parentSearchResult | async as options; else productLoading"
+          >
+            <mat-option *ngFor="let option of options" [value]="option">
+              {{ option.sku }}
+            </mat-option>
+          </ng-container>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <ng-container *ngIf="parentTable.length; else zeroProducts">
+        <div class="table-responsive border rounded">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th scope="col" class="border-top-0">SKU</th>
+                <th scope="col" class="border-top-0">Product</th>
+                <th scope="col" class="border-top-0">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of parentTable; let i = index">
+                <td class="align-middle">{{ product.sku }}</td>
+                <td class="align-middle">{{ product.name }}</td>
+                <td class="align-middle">
+                  <mat-icon
+                    class="text-danger pointer"
+                    (click)="removeParentEntry(i)"
+                    >delete_outline</mat-icon
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+      <div class="text-right">
+        <button
+          [disabled]="!parentTable.length"
+          mat-flat-button
+          type="button"
+          class="btn-purple text-white mt-3"
+          (click)="onClickNext()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #step2>
+  <div class="pl-sm pr-sm mb-4 d-flex align-items-center">
+    <button
+      mat-ripple
+      class="px-2 py-1 border border-primary bg-white d-flex align-items-center rounded mr-3"
+      (click)="goBack()"
+    >
+      <mat-icon class="text-purple">arrow_back</mat-icon>
+    </button>
+
+    <div>
+      <h1 class="mb-0">Add combo</h1>
+      <p class="text-muted mb-0">
+        Step 2 - Select child SKUS (You can select more than one SKU)
+      </p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="w-75 tab mob mx-auto bdr-g br-10 p-4">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Search and add products</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="search"
+          #productSearch4Child
+          [matAutocomplete]="cAutocomplete"
+          [formControl]="childAutocomplete"
+          (input)="searchProductParent($event)"
+        />
+        <mat-autocomplete
+          #cAutocomplete="matAutocomplete"
+          [displayWith]="formatChildValue.bind(this)"
+        >
+          <ng-template #productLoading>
+            <mat-option
+              *ngIf="productSearch4Child.value.length > 2"
+              class="is-loading"
+              >Loading...</mat-option
+            >
+          </ng-template>
+
+          <ng-container
+            *ngIf="parentSearchResult | async as options; else productLoading"
+          >
+            <mat-option *ngFor="let option of options" [value]="option">
+              {{ option.sku }}
+            </mat-option>
+          </ng-container>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <ng-container *ngIf="childTable.length; else zeroProducts">
+        <div class="table-responsive border rounded">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th scope="col" class="border-top-0">SKU</th>
+                <th scope="col" class="border-top-0">Product</th>
+                <th scope="col" class="border-top-0">Quantity</th>
+                <th scope="col" class="border-top-0">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of childTable; let i = index">
+                <td class="align-middle">{{ product.sku }}</td>
+                <td class="align-middle">{{ product.name }}</td>
+                <td class="pb-0 align-middle">
+                  <mat-form-field
+                    appearance="outline"
+                    style="width: 7rem"
+                    class="input-product"
+                  >
+                    <input
+                      matInput
+                      type="number"
+                      [formControl]="product.quantity"
+                    />
+                  </mat-form-field>
+                </td>
+                <td class="align-middle">
+                  <mat-icon
+                    class="text-danger pointer"
+                    (click)="removeChildEntry(i)"
+                    >delete_outline</mat-icon
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+      <div class="mt-3">
+        <button mat-stroked-button type="button" (click)="onClickPrevious()">
+          Previous
+        </button>
+        <button
+          [disabled]="!childTable.length"
+          mat-flat-button
+          type="button"
+          class="btn-purple text-white float-right"
+          (click)="onClickNext()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #step3>
+  <div class="pl-sm pr-sm mb-4 d-flex align-items-center">
+    <button
+      mat-ripple
+      class="px-2 py-1 border border-primary bg-white d-flex align-items-center rounded mr-3"
+      (click)="goBack()"
+    >
+      <mat-icon class="text-purple">arrow_back</mat-icon>
+    </button>
+
+    <div>
+      <h1 class="mb-0">Add combo</h1>
+      <p class="text-muted mb-0">Step 3 - confirm your combo</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="w-75 tab mob mx-auto bdr-g br-10 p-4">
+      <ng-container
+        *ngIf="childTable.length || parentTable.length; else zeroProducts"
+      >
+        <div class="table-responsive border rounded">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th scope="col" class="border-top-0">Combo</th>
+                <th scope="col" class="border-top-0 w-50">Child Items</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td *ngFor="let product of parentTable" class="align-middle">
+                  {{ product.name }}
+                </td>
+                <td class="align-middle">
+                  <ol class="pl-3">
+                    <li
+                      *ngFor="let item of childTable; let i = index"
+                      class="list-style"
+                    >
+                      {{ item.name }}&nbsp;({{ item.quantity.value }}&nbsp; Qty)
+                    </li>
+                  </ol>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+      <div class="mt-3">
+        <button mat-stroked-button type="button" (click)="onClickPrevious()">
+          Previous
+        </button>
+        <button
+          [disabled]="!childTable.length || !parentTable.length"
+          mat-flat-button
+          type="button"
+          class="btn-purple text-white float-right"
+          (click)="submitCombo()"
+        >
+          Finish
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #zeroProducts>
+  <div
+    class="d-flex align-items-center justify-content-center bdr-g br-10"
+    style="height: 30vh"
+  >
+    <h2 class="text-muted font-weight-bold">No Products Found</h2>
+  </div>
+</ng-template>

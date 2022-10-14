@@ -1,0 +1,102 @@
+@import '../../../../../assets/scss/main.scss';
+
+$color1: #d6dce0;
+$color2: #ddd;
+
+.timeline {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.li {
+  transition: all 200ms ease-in;
+}
+
+.timestamp {
+  height: 1rem;
+  width: 0;
+  white-space: nowrap;
+  // margin-bottom: 25px;
+  padding: 0px 2.1rem;
+  font-weight: bold;
+  color: $voilet;
+
+  & small {
+    position: relative;
+    left: -2.5rem;
+    top: -0.6rem;
+  }
+}
+
+.ts-bottom {
+  & small {
+    top: unset;
+    bottom: -0.3rem;
+    color: var(--gray);
+  }
+}
+
+li:last-of-type .timestamp {
+  padding: unset;
+
+  & small {
+    left: -1rem;
+  }
+}
+
+.status {
+  // left: 1rem;
+  border-top: 7px solid $color1;
+  position: relative;
+  transition: all 200ms ease-in;
+  &:before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-color: $color1;
+    border-radius: 25px;
+    border: 1px solid $color2;
+    position: absolute;
+    top: -0.8rem;
+    left: -0.1rem;
+    transition: all 200ms ease-in;
+  }
+}
+
+.li.complete {
+  .status {
+    border-top: 7px solid $voilet;
+    &:before {
+      background-color: $voilet;
+      border: none;
+      content: '\2713';
+      text-align: center;
+      color: white;
+      transition: all 200ms ease-in;
+    }
+  }
+}
+
+// @media (min-device-width: 320px) and (max-device-width: 700px) {
+//   .timeline {
+//     list-style-type: none;
+//     display: block;
+//   }
+//   .li {
+//     transition: all 200ms ease-in;
+//     display: flex;
+//     width: inherit;
+//   }
+//   .timestamp {
+//     width: 100px;
+//   }
+//   .status {
+//     &:before {
+//       left: -8%;
+//       top: 30%;
+//       transition: all 200ms ease-in;
+//     }
+//   }
+// }

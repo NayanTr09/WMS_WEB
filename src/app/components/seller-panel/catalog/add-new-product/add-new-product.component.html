@@ -1,0 +1,231 @@
+<ng-container
+  [ngTemplateOutlet]="isAddNewProduct ? addNewProduct : mapProducts"
+></ng-container>
+<app-my-loader></app-my-loader>
+
+<ng-template #addNewProduct>
+  <div class="pl-sm pr-sm mb-3 d-flex align-items-center">
+    <button
+      mat-ripple
+      class="px-2 py-1 border border-primary bg-white d-flex align-items-center rounded mr-3"
+      (click)="goBack()"
+    >
+      <mat-icon class="text-purple">arrow_back</mat-icon>
+    </button>
+
+    <h1 class="mb-0">Add New Product</h1>
+  </div>
+
+  <div class="container">
+    <div class="w-75 tab mob mx-auto bdr-g br-10 p-4">
+      <div class="row">
+        <div class="col-sm-8 mb-2 mb-sm-0">
+          <div class="br-10 p-4 bg-grey">
+            <h3 class="mb-2 font-weight-bold">Things to remember:</h3>
+            <ol class="pl-3">
+              <li class="list-custom">
+                Make sure you remove the sample data from sample sheet and add
+                your own product data before uploading the sheet
+              </li>
+              <li class="list-custom">Mandatory fields must be filled</li>
+              <li class="list-custom">
+                Image link added in the sheet should be public and in jpg format
+                only
+              </li>
+              <li class="list-custom">Do not edit or delete any column</li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div
+            class="br-10 h-100 bg-grey py-4 d-flex flex-column align-items-center justify-content-center"
+          >
+            <button
+              class="bg-white text-purple border rounded p-3 px-4 mb-3"
+              (click)="uploadFile.click()"
+            >
+              <mat-icon>upload</mat-icon>
+              <input
+                type="file"
+                #uploadFile
+                hidden
+                accept=".csv"
+                (change)="onFileSelect($event)"
+              />
+            </button>
+
+            <a
+              href="javascript:void(0);"
+              class="d-flex align-items-center text-decoration-none text-purple"
+              (click)="downloadSampleCsv('products/sample', 'downloadCSV.csv')"
+            >
+              Download Sample Sheet
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <hr />
+          <button
+            mat-flat-button
+            [disabled]="!canNavigate"
+            class="float-right btn-purple"
+            (click)="onClickFinish()"
+          >
+            Finish
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #mapProducts>
+  <div class="pl-sm pr-sm mb-3 d-flex align-items-center">
+    <button
+      mat-ripple
+      class="px-2 py-1 border border-primary bg-white d-flex align-items-center rounded mr-3"
+      (click)="goBack()"
+    >
+      <mat-icon class="text-purple">arrow_back</mat-icon>
+    </button>
+
+    <h1 class="mb-0">Map Products</h1>
+  </div>
+
+  <div class="container">
+    <div class="w-75 tab mob mx-auto bdr-g br-10 p-4">
+      <div class="row">
+        <div class="col-sm-8 mb-2 mb-sm-0">
+          <div class="br-10 p-4 bg-grey">
+            <h3 class="mb-2 font-weight-bold">Things to remember:</h3>
+            <ol class="pl-3">
+              <li class="list-custom">
+                Make sure you remove sample data and enter your product data
+                before uploading the file
+              </li>
+              <li class="list-custom">
+                Enter the correct channel name (as shown in the channel
+                integration page)
+              </li>
+              <li class="list-custom">
+                Channel product id is unique identification id for your product
+                (It will be different for different channels)
+              </li>
+              <!-- <li class="list-custom">Do not edit or delete any column</li> -->
+            </ol>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div
+            class="br-10 h-100 bg-grey py-4 d-flex flex-column align-items-center justify-content-center"
+          >
+            <button
+              class="bg-white text-purple border rounded p-3 px-4 mb-3"
+              (click)="uploadFile.click()"
+            >
+              <mat-icon>upload</mat-icon>
+              <input
+                type="file"
+                #uploadFile
+                hidden
+                accept=".csv"
+                (change)="onFileSelect($event)"
+              />
+            </button>
+
+            <a
+              href="javascript:void(0);"
+              class="d-flex align-items-center text-decoration-none text-purple"
+              (click)="downloadSampleCsv('listings/sample', 'downloadCSV.csv')"
+            >
+              Download Sample Sheet
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <hr />
+          <button
+            mat-flat-button
+            [disabled]="!canNavigate"
+            class="float-right btn-purple"
+            (click)="onClickFinish()"
+          >
+            Finish
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #responseDialog let-data>
+  <app-my-loader></app-my-loader>
+  <div mat-dialog-title class="mb-5">
+    <button mat-icon-button class="float-right" (click)="dialog.closeAll()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h3 class="font-weight-bold">Bulk Products Upload via SKU</h3>
+  </div>
+
+  <mat-dialog-content>
+    <ul class="list-group mb-3">
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        Updated
+        <span class="badge badge-primary badge-pill badge-custom">{{
+          data.updated
+        }}</span>
+      </li>
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        Added
+        <span class="badge badge-primary badge-pill badge-custom">{{
+          data.added
+        }}</span>
+      </li>
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        Errors
+        <span class="badge badge-primary badge-pill badge-custom">{{
+          data.errors
+        }}</span>
+      </li>
+    </ul>
+
+    <a
+      href="#"
+      #errorFile
+      hidden
+      onclick="return false"
+      appDownload
+      [name]="'errorfile.csv'"
+      [download_url]="data.errorUrl"
+    ></a>
+
+    <button
+      mat-flat-button
+      *ngIf="data.errors"
+      class="w-100 bg-danger text-white"
+      (click)="errorFile.click()"
+    >
+      Download file error
+    </button>
+    <button
+      mat-flat-button
+      *ngIf="!data.errors"
+      class="w-100"
+      (click)="dialog.closeAll()"
+    >
+      OK
+    </button>
+  </mat-dialog-content>
+</ng-template>

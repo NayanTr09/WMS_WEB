@@ -1,0 +1,87 @@
+<div class="m-md">
+  <app-filters
+    [filter_information]="filters_info"
+    (filtersEvent)="updateFilters($event)"
+  ></app-filters>
+</div>
+
+<div class="br-6 bg-white m-md">
+  <app-no-data-found
+    *ngIf="!stockTransferListSource.data.length && !firstTimeLoad"
+  ></app-no-data-found>
+
+  <div class="table-wrap" *ngIf="stockTransferListSource.data.length">
+    <div class="table-container">
+      <table
+        mat-table
+        [dataSource]="stockTransferListSource"
+        class="mat-elevation-z8"
+      >
+        <!-- ID Column -->
+        <ng-container matColumnDef="stock_transfer_id">
+          <th mat-header-cell *matHeaderCellDef>Stock Transfer ID</th>
+          <td mat-cell *matCellDef="let element">
+            <a
+              href="javascript:void();"
+              (click)="navigateToCreateAsn(element)"
+              >{{ element.stock_transfer_id }}</a
+            >
+          </td>
+        </ng-container>
+
+        <!-- Created_at Column -->
+        <ng-container matColumnDef="created_at">
+          <th mat-header-cell *matHeaderCellDef>Created At</th>
+          <td mat-cell *matCellDef="let element">{{ element.created_at }}</td>
+        </ng-container>
+
+        <!-- Unique SKU Column -->
+        <ng-container matColumnDef="unique_skus">
+          <th mat-header-cell *matHeaderCellDef>Unique SKUs/Units</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.unique_sku }} SKUs / {{ element.total_units }} Units
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="from_center">
+          <th mat-header-cell *matHeaderCellDef>Fulfillment Center</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.from_center }}
+            <span>&#8594;</span>
+            {{ element.to_center }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="text-center">Status</th>
+          <td mat-cell *matCellDef="let element">
+            <ng-container
+              [ngTemplateOutlet]="shippingStatus"
+              [ngTemplateOutletContext]="{
+                data: statusMapping[element.status]
+              }"
+            ></ng-container>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="listColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: listColumns"></tr>
+      </table>
+    </div>
+    <mat-paginator
+      #paginator
+      [pageSizeOptions]="pageSizeOptions"
+      [length]="dataLength"
+      [pageIndex]="currentPage"
+      [pageSize]="queryparams.per_page"
+      (page)="onPaginateChange($event)"
+    >
+    </mat-paginator>
+  </div>
+</div>
+
+<ng-template #shippingStatus let-data="data">
+  <div class="alert text-center mb-0 px-1 py-2" [ngStyle]="data">
+    {{ data?.title }}
+  </div>
+</ng-template>

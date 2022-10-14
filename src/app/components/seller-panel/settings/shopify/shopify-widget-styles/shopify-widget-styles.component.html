@@ -1,0 +1,90 @@
+<app-my-loader></app-my-loader>
+
+<div class="main m-auto rounded">
+  <div class="navbar d-flex justify-content-around pt-5">
+    <h2 class="font-weight-bold">2. Configure Widget Styles</h2>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7 border-right border-gray py-5">
+        <label for="basic-url">Button Color</label>
+        <div class="input-group mb-3">
+          <input
+            type="color"
+            class="form-control flex-shrink-0"
+            (change)="handleButtonColorChange($event.target.value)"
+            [value]="buttonColor"
+          />
+
+          <input
+            type="text"
+            class="form-control w-75"
+            placeholder="Enter button color"
+            [(ngModel)]="buttonColor"
+            (change)="handleButtonColorChange($event.target.value)"
+          />
+        </div>
+
+        <label for="basic-url">Button Text</label>
+        <div class="input-group mb-3">
+          <input
+            type="color"
+            class="form-control flex-shrink-0"
+            (change)="handleButtonTextChange($event.target.value)"
+            [value]="buttonText"
+          />
+          <input
+            type="text"
+            class="form-control w-75"
+            placeholder="Enter button text color"
+            [(ngModel)]="buttonText"
+            (change)="handleButtonTextChange($event.target.value)"
+          />
+        </div>
+      </div>
+
+      <div
+        class="col-md-5 border-left border-gray d-flex align-items-center py-5"
+      >
+        <div class="w-100">
+          <label for="basic-url">Button Preview</label>
+          <div class="d-flex">
+            <input
+              type="text"
+              disabled
+              class="form-control bg-light w-50 mb-0"
+              value="110034"
+            />
+            <span
+              class="btn ml-2 text-center"
+              [ngStyle]="{ backgroundColor: buttonColor }"
+            >
+              <span [ngStyle]="{ color: buttonText }">Check Pincode</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <footer class="d-flex justify-content-between mx-5 my-4">
+    <button
+      mat-flat-button
+      type="button"
+      class="my-1 btn-white text-purple px-5"
+      routerLink="/shopify"
+    >
+      Previous
+    </button>
+    <button
+      mat-flat-button
+      (click)="onSubmit()"
+      class="my-1 btn-purple text-white px-5"
+    >
+      Next
+    </button>
+  </footer>
+</div>

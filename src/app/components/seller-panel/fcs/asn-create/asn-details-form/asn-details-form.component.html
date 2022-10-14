@@ -1,0 +1,237 @@
+<form [formGroup]="asnDetails" (submit)="onClickSubmit($event)">
+  <div class="text-center p-sm-4">
+    <h2 class="font-weight-bold">ASN Completed</h2>
+    <div class="d-flex justify-content-center">
+      <p class="w-50 w-95 tab-view text-muted">
+        ASN created successfully. Add the tracking details to get this inventory
+        added in the back orders.
+      </p>
+    </div>
+    <br />
+    <div class="text-left">
+      <div class="table-responsive bdr-lg shipping-info">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" class="border-top-0 tab-width">Shipping From</th>
+              <th scope="col" class="border-top-0 tab-width">Shipping To</th>
+
+              <th scope="col" class="border-top-0 download-tab">Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <ng-container
+                *ngFor="let address of shippingAddress | async | keyvalue"
+              >
+                <ng-container
+                  [ngTemplateOutlet]="
+                    address.key === 'shipped_from' ? shippedFrom : shippedTo
+                  "
+                  [ngTemplateOutletContext]="{ data: address.value }"
+                ></ng-container>
+              </ng-container>
+              <td class="align-middle">
+                <div class="d-flex flex-column w-50 mx-auto">
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    class="text-purple mb-2"
+                    (click)="handleDownload(downloadUrls.asn_document, 'asn')"
+                  >
+                    <mat-icon>download</mat-icon>
+                    ASN
+                  </button>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    class="text-purple mb-2"
+                    (click)="
+                      handleDownload(downloadUrls.invoice_url, 'invoice')
+                    "
+                  >
+                    <mat-icon>download</mat-icon>
+                    Invoice
+                  </button>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    class="text-purple"
+                    (click)="
+                      handleDownload(downloadUrls.barcode_url, 'barcode')
+                    "
+                  >
+                    <mat-icon>download</mat-icon>
+                    Barcodes
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-responsive border sku-details">
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th scope="col" class="border-top-0">SKU</th>
+              <th scope="col" class="border-top-0">Name</th>
+              <th scope="col" class="border-top-0">Expected</th>
+              <th scope="col" class="border-top-0">GRN Closed</th>
+              <th scope="col" class="border-top-0">Quality Check Failed</th>
+              <th scope="col" class="border-top-0">GRN Pending</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of (asnOverview | async)?.items">
+              <tr>
+                <td>{{ item.sku }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.qc_passed_quantity }}</td>
+                <td>{{ item.qc_failed_quantity }}</td>
+                <td>
+                  {{
+                    item.quantity -
+                      (item.qc_failed_quantity + item.qc_passed_quantity)
+                  }}
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="isBulk">
+              <tr *ngIf="isBulk && skus_left">
+                <td colspan="6">
+                  <span class="pull-right"
+                    >... {{ skus_left }} more items.</span
+                  >
+                </td>
+              </tr>
+            </ng-container>
+            <tr class="tr-total">
+              <td></td>
+              <th scope="row">Total</th>
+              <td>{{ tableTotal.total_expected }}</td>
+              <td>{{ tableTotal.total_passed }}</td>
+              <td>{{ tableTotal.total_failed }}</td>
+              <td>{{ tableTotal.total_missing }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <br />
+
+      <h4 class="font-weight-bold mb-2">
+        Shipping Details
+        <small class="text-muted font-normal" *ngIf="!isAwbAvailable"
+          >(optional)</small
+        >
+      </h4>
+      <div class="d-flex justify-content-between flex-wrap">
+        <mat-form-field appearance="outline">
+          <mat-label>Select Courier</mat-label>
+          <input
+            [readonly]="isAwbAvailable"
+            matInput
+            *ngIf="isAwbAvailable"
+            formControlName="selectCourier"
+          />
+          <mat-select *ngIf="!isAwbAvailable" formControlName="selectCourier">
+            <mat-option
+              *ngFor="let option of courierList | async"
+              [value]="option.name"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="asnDetails.get('selectCourier').hasError('required')"
+          >
+            Courier selection is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="fill"
+          class="w-25 no-underline-fill awb-num"
+        >
+          <mat-label>AWB number</mat-label>
+          <input
+            [readonly]="isAwbAvailable"
+            matInput
+            placeholder="Enter Airway Bill (AWB) number"
+            formControlName="awbNumber"
+          />
+          <mat-error *ngIf="asnDetails.get('awbNumber').hasError('required')">
+            AWB number is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="asnDetails.get('awbNumber').hasError('minlength')">
+            Minimum length should be 5
+          </mat-error>
+          <mat-error *ngIf="asnDetails.get('awbNumber').hasError('maxlength')">
+            Maximum length should be 32
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <hr *ngIf="!isAwbAvailable" />
+  <div class="d-flex">
+    <button
+      *ngIf="!isAwbAvailable"
+      mat-stroked-button
+      [disabled]="isAwbAvailable"
+      class="ml-auto btn-purple text-light"
+      type="submit"
+    >
+      Save
+    </button>
+  </div>
+</form>
+
+<ng-template #shippedFrom let-data="data">
+  <td>
+    <div>
+      <p class="font-weight-bold">{{ data.name }}</p>
+      {{ data.address }}
+      <br *ngIf="data.address_2" />{{ data.address_2 }} <br />{{
+        data.city
+      }}&nbsp;{{ data.state }} <br />{{ data.pin_code }}
+      <br />
+      <br />
+      <p class="font-weight-bold">Appointment</p>
+      {{ slot_date | date: 'EEE, MMM d, y' }}
+      <br />
+      {{ slot_timings }}
+      <br />
+
+      <ng-container *ngIf="grn_expected_date">
+        <p class="font-weight-bold">Expected GRN</p>
+        {{ grn_expected_date | date: 'EEE, MMM d, y' }}
+      </ng-container>
+    </div>
+  </td>
+</ng-template>
+
+<ng-template #shippedTo let-data="data">
+  <td *ngIf="data.name">
+    <div>
+      <p class="font-weight-bold">{{ data.name }}</p>
+      {{ data.address_1 }}
+      <br *ngIf="data.address_2" />{{ data.address_2 }} <br />{{
+        data.city
+      }}&nbsp;{{ data.state }} <br />{{ data.pin_code }}
+    </div>
+    <div
+      *ngIf="data.warehouse_code"
+      class="mt-3 border text-center p-sm-2 w-50 w-90 tab-view rounded"
+    >
+      {{ data.warehouse_code }}&nbsp;{{ data.city }}
+    </div>
+  </td>
+  <td *ngIf="!data.name">
+    <div>{{ data }}</div>
+  </td>
+  <td *ngIf="!data.name">
+    <div>{{ data }}</div>
+  </td>
+</ng-template>

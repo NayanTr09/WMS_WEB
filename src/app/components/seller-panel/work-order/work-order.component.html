@@ -1,0 +1,62 @@
+<div class="pl-sm pr-sm mb-3">
+  <h1 class="mb-2">Work Order</h1>
+</div>
+<div class="card border-0">
+  <nav mat-tab-nav-bar class="pl-sm pr-sm">
+    <a
+      mat-tab-link
+      *ngFor="let link of tabLinks"
+      (click)="tabClick($event)"
+      [routerLink]="link.link"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="link.is_active"
+      >{{ link.label }}</a
+    >
+    <button
+      mat-flat-button
+      *ngIf="
+        (isActive('/work-order/kitting') || isActive('/work-order/removal')) &&
+        showButton
+      "
+      class="m-2 ml-auto create-kit-btn"
+      [matMenuTriggerFor]="addNewMenu"
+    >
+      + Add New
+    </button>
+
+    <mat-menu #addNewMenu="matMenu">
+      <button mat-menu-item (click)="navigateToCreateKitting()">
+        <mat-icon class="mr-2" svgIcon="assets:kit"></mat-icon>
+        Kitting
+      </button>
+      <!-- <button mat-menu-item (click)="raiseARequest()">
+        <mat-icon class="mr-2" svgIcon="assets:removal"></mat-icon>
+        Raise A Request
+      </button> -->
+    </mat-menu>
+  </nav>
+
+  <app-my-loader></app-my-loader>
+  <app-kitting
+    *ngIf="isActive('/work-order/kitting')"
+    [populate_filter_data]="filtersData"
+    [query]="queryParams['kitting']"
+    (paramsEvent)="updateQueryParams($event)"
+    (create_button)="showCreateButton($event)"
+    >Loading</app-kitting
+  >
+
+  <app-de-kitting
+    *ngIf="isActive('/work-order/de-kitting')"
+    [populate_filter_data]="filtersData"
+    [query]="queryParams['kitting']"
+    (paramsEvent)="updateQueryParams($event)"
+  ></app-de-kitting>
+
+  <app-removal
+    *ngIf="isActive('/work-order/removal')"
+    [query]="queryParams['removal']"
+    (paramsEvent)="updateQueryParams($event)"
+  ></app-removal>
+</div>

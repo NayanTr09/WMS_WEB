@@ -1,0 +1,325 @@
+<div class="m-md">
+  <app-filters
+    [filter_information]="filtersInfo"
+    (filtersEvent)="updateFilters($event)"
+  ></app-filters>
+</div>
+
+<div class="br-6 bg-white m-md">
+  <form [formGroup]="productsForm">
+    <app-no-data-found *ngIf="!productTable.length"></app-no-data-found>
+    <div class="table-wrap" *ngIf="productTable.length">
+      <div class="table-container">
+        <ng-container formArrayName="productTable">
+          <table
+            mat-table
+            [dataSource]="getDataSource()"
+            class="mat-elevation-z8"
+          >
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox
+                  class="gray-checkbox"
+                  color="primary"
+                  (change)="$event ? masterToggle() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  [aria-label]="checkboxLabel()"
+                >
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox
+                  class="gray-checkbox"
+                  color="primary"
+                  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(element.value.id) : null"
+                  [checked]="selection.isSelected(element.value.id)"
+                  [aria-label]="checkboxLabel(element.value.id)"
+                >
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sku">
+              <th mat-header-cell *matHeaderCellDef class="fixedWidth">SKU</th>
+              <td mat-cell *matCellDef="let element; let i = index">
+                <div class="d-flex">
+                  <img
+                    [src]="element.get('image_url').value"
+                    onerror="this.onerror=null;this.src='../../../../../assets/svg/default_image.svg';"
+                    width="30"
+                    height="30"
+                    class="mr-2"
+                    alt="product"
+                  />
+                  <div>
+                    <span class="text-wrap">{{
+                      element.get('master_sku_code').value
+                    }}</span>
+                    <br />
+                    <a
+                      href="javascript:void(0);"
+                      *ngIf="
+                        element.get('listings')?.value?.length &&
+                        !enableEditMode(i)
+                      "
+                      type="button"
+                      (click)="onClickMapped(i)"
+                      class="text-purple text-decoration-none d-flex align-items-center"
+                    >
+                      <mat-icon
+                        class="mr-1 svg-icon"
+                        svgIcon="assets:mapped"
+                      ></mat-icon>
+                      Mapped
+                    </a>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef style="max-width: 20rem">
+                Name
+              </th>
+              <td
+                mat-cell
+                [formGroup]="element"
+                *matCellDef="let element; let i = index"
+              >
+                <div *ngIf="!enableEditMode(i)">
+                  {{ element.get('product_name').value }}
+                  <br />
+                  <a
+                    href="javascript:void(0);"
+                    *ngIf="element.get('combo')?.value?.length"
+                    class="text-purple text-decoration-none d-flex align-items-center"
+                    (click)="onClickCombo(i)"
+                  >
+                    <mat-icon
+                      class="mr-1 svg-icon combo"
+                      svgIcon="assets:combo"
+                    ></mat-icon>
+                    Combo
+                  </a>
+                </div>
+                <mat-form-field
+                  appearance="outline"
+                  *ngIf="enableEditMode(i)"
+                  class="input-product fixedWidth"
+                  floatLabel="never"
+                >
+                  <input matInput formControlName="product_name" />
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mrp">
+              <th mat-header-cell *matHeaderCellDef>MRP</th>
+              <td
+                mat-cell
+                [formGroup]="element"
+                *matCellDef="let element; let i = index"
+              >
+                <span *ngIf="!enableEditMode(i)">
+                  {{ element.get('mrp').value }}
+                </span>
+                <mat-form-field
+                  appearance="outline"
+                  *ngIf="enableEditMode(i)"
+                  class="input-product"
+                  floatLabel="never"
+                  style="width: 7rem"
+                >
+                  <input matInput type="number" formControlName="mrp" />
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dimensions">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Dimension
+              </th>
+              <td
+                mat-cell
+                class="text-center"
+                [formGroup]="element"
+                *matCellDef="let element; let i = index"
+              >
+                <span *ngIf="!enableEditMode(i)">
+                  {{ element.get('dimensions').value }}
+                </span>
+                <div style="width: 10rem">
+                  <mat-form-field
+                    appearance="outline"
+                    *ngIf="enableEditMode(i)"
+                    class="input-product"
+                    floatLabel="never"
+                    style="width: 2.5rem"
+                  >
+                    <input matInput formControlName="length_cm" />
+                  </mat-form-field>
+                  <span *ngIf="enableEditMode(i)">&nbsp;x&nbsp;</span>
+                  <mat-form-field
+                    appearance="outline"
+                    *ngIf="enableEditMode(i)"
+                    class="input-product"
+                    floatLabel="never"
+                    style="width: 2.5rem"
+                  >
+                    <input matInput formControlName="width_cm" />
+                  </mat-form-field>
+                  <span *ngIf="enableEditMode(i)">&nbsp;x&nbsp;</span>
+                  <mat-form-field
+                    appearance="outline"
+                    *ngIf="enableEditMode(i)"
+                    class="input-product"
+                    floatLabel="never"
+                    style="width: 2.5rem"
+                  >
+                    <input matInput formControlName="height_cm" />
+                  </mat-form-field>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="weight">
+              <th mat-header-cell *matHeaderCellDef>Weight</th>
+              <td
+                mat-cell
+                [formGroup]="element"
+                *matCellDef="let element; let i = index"
+              >
+                <span *ngIf="!enableEditMode(i)">
+                  {{ element.get('weight_kgs').value }}&nbsp;Kg
+                </span>
+                <mat-form-field
+                  appearance="outline"
+                  *ngIf="enableEditMode(i)"
+                  class="input-product"
+                  floatLabel="never"
+                  style="width: 5rem"
+                >
+                  <input matInput type="number" formControlName="weight_kgs" />
+                  <span matSuffix>Kg</span>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef class="w-7rem text-center">
+                Action
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let element; let i = index"
+                class="text-center"
+              >
+                <div *ngIf="enableEditMode(i)">
+                  <mat-icon class="text-danger pointer" (click)="cancelEdit(i)"
+                    >cancel</mat-icon
+                  >
+                  <mat-icon class="text-green pointer" (click)="submitEdit(i)"
+                    >check_circle</mat-icon
+                  >
+                </div>
+
+                <button
+                  *ngIf="!enableEditMode(i)"
+                  mat-button
+                  class="text-purple"
+                  (click)="editRow(i)"
+                >
+                  <mat-icon style="font-size: 12px; line-height: 20px"
+                    >border_color</mat-icon
+                  >Edit
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <!-- <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr> -->
+          </table>
+        </ng-container>
+      </div>
+      <mat-paginator
+        #paginator
+        [pageSizeOptions]="pageSizeOptions"
+        [length]="resultsLength"
+        [pageIndex]="currentPage"
+        [pageSize]="queryparams.per_page"
+        (page)="handlePage($event)"
+      >
+      </mat-paginator>
+    </div>
+  </form>
+</div>
+
+<ng-template #mapDialog let-data>
+  <div mat-dialog-title class="mb-3">
+    <button mat-icon-button class="float-right" (click)="dialog.closeAll()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2 class="mb-2">SKU Mapping Detail</h2>
+    <p class="text-muted">
+      {{ data?.sku }} has been mapped with {{ data?.listings?.length }} channel
+      SKU(s)
+    </p>
+  </div>
+
+  <mat-dialog-content>
+    <div class="table-responsive bdr-g br-10">
+      <table class="table text-center mb-0">
+        <thead>
+          <tr>
+            <th scope="col" class="border-top-0">SKU</th>
+            <th scope="col" class="border-top-0 border-left">Channel SKU</th>
+            <th scope="col" class="border-top-0 border-left">Channel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let listing of data?.listings">
+            <td>{{ data?.sku }}</td>
+            <td class="border-left">{{ listing?.channel_sku }}</td>
+            <td class="border-left">{{ listing?.channel?.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-dialog-content>
+</ng-template>
+
+<ng-template #comboDialog let-data>
+  <div mat-dialog-title class="mb-3">
+    <button mat-icon-button class="float-right" (click)="dialog.closeAll()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2 class="mb-2">Combo Detail</h2>
+    <p class="text-muted">{{ data?.sku }} has been added as virtual combo</p>
+  </div>
+
+  <mat-dialog-content>
+    <p><strong>Parent SKU: </strong>{{ data?.combo[0]?.product_sku }}</p>
+    <div class="table-responsive bdr-g br-10">
+      <table class="table mb-0 text-center">
+        <thead>
+          <tr>
+            <th scope="col" class="border-top-0">Child SKU</th>
+            <th scope="col" class="border-top-0 border-left">
+              Child SKU Quantity
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of data.combo">
+            <td>{{ c?.component_sku }}</td>
+            <td class="border-left">{{ c?.component_qty }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-dialog-content>
+</ng-template>

@@ -1,0 +1,118 @@
+@import '../main.scss';
+
+$color1: #7699ad;
+$background: #f5f6fa;
+
+::ng-deep .sidenav {
+  background: $background;
+  padding: 10px 14px;
+  transition: width 0.4s;
+
+  .mat-drawer-inner-container {
+    overflow: hidden;
+  }
+
+  .active {
+    .menu-icon {
+      color: $voilet !important;
+    }
+
+    .side-nav-text {
+      color: $voilet !important;
+    }
+  }
+
+  .selected {
+    & .mat-expansion-panel-header-title {
+      color: $voilet !important;
+    }
+  }
+
+  .mat-list-item {
+    color: $color1;
+    border: 1px solid $background;
+  }
+
+  .mat-nav-list > span {
+    margin: 15px 0;
+    display: block;
+  }
+  .material-icons {
+    font-size: 38px;
+    color: #8b92a1;
+  }
+  .menu-icon {
+    font-size: 22px;
+    padding: 10px;
+    color: $color1;
+  }
+  .mat-expansion-panel {
+    box-shadow: none !important;
+    background: none;
+  }
+  .mat-list-item-content {
+    padding: 0 !important;
+    align-items: center;
+  }
+  .side-nav-text {
+    color: $color1 !important;
+    font-size: 14px !important;
+  }
+
+  .nav-icon,
+  .nav-logo {
+    display: none !important;
+  }
+
+  .sidenav-menu {
+    .mat-expansion-panel-header {
+      border: 1px solid $background;
+      padding: 0px !important;
+      padding-right: 1rem !important;
+      align-items: center;
+    }
+
+    .mat-expansion-panel-header-title {
+      color: $color1;
+      align-items: center;
+    }
+
+    .mat-expansion-panel-body {
+      padding: 0 0 0 10px !important;
+    }
+  }
+
+  &.sidenav-open {
+    width: 13rem;
+    .nav-logo {
+      display: block !important;
+    }
+  }
+
+  &.sidenav-closed {
+    width: 72px;
+
+    .nav-icon {
+      display: block !important;
+    }
+
+    .side-nav-text {
+      display: none;
+    }
+
+    .sidenav-menu {
+      .mat-expansion-panel-header {
+        color: $color1;
+        padding: 0px !important;
+      }
+    }
+    .mat-expansion-indicator:after {
+      content: none;
+    }
+
+    @media screen and (max-width: 768px) {
+      width: 0;
+      padding: 0;
+    }
+  }
+}

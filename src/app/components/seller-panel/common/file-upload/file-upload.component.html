@@ -1,0 +1,26 @@
+<button
+  class="form-control mb-0 fluid br-6 w-100 block bg-none"
+  (click)="fileInput.click()"
+>
+  <div class="row pr-0">
+    <div
+      class="col-md-7 col-sm-7 text-left filename pt-1 overflow-hidden pr-0"
+      style="font-size: 11px"
+    >
+      {{ selectedFile }}
+    </div>
+    <div class="col-md-5 p-0 col-sm-5" style="font-size: 14px">
+      <span class="text-blue">
+        <span class="icon-upload text-middle mr-xs"></span>{{ label }}
+      </span>
+    </div>
+    <input
+      #fileInput
+      class="file-input"
+      type="file"
+      [accept]="accept"
+      (change)="getFileName($event)"
+      style="display: none"
+    />
+  </div>
+</button>

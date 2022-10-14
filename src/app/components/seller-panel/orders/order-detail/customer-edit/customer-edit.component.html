@@ -1,0 +1,241 @@
+<app-my-loader></app-my-loader>
+<div class="container-fluid p-0">
+  <h2 class="h3 mb-3">Edit Details</h2>
+  <hr />
+
+  <form [formGroup]="updateCustomerForm">
+    <div class="row m-0">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Full Name</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="fullname"
+            placeholder="Full Name"
+          />
+          <mat-error
+            *ngIf="
+              updateCustomerForm.controls.fullname.touched &&
+              updateCustomerForm.controls.fullname.invalid
+            "
+          >
+            Full name is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 text-md-center">
+        <mat-form-field appearance="outline">
+          <mat-label>Address 1</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="address1"
+            placeholder="Address 1"
+          />
+          <mat-error
+            *ngIf="
+              updateCustomerForm.controls.address1.touched &&
+              updateCustomerForm.controls.address1.invalid
+            "
+          >
+            Address1 is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 text-md-right">
+        <mat-form-field appearance="outline">
+          <mat-label>Address 2</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="address2"
+            placeholder="Address 2"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- SECCOND ROW -->
+    <div class="row m-0">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Country</mat-label>
+          <mat-select
+            formControlName="country"
+            (selectionChange)="
+              getStates(updateCustomerForm.get(['country']).value)
+            "
+          >
+            <mat-option value="">Select Country</mat-option>
+            <mat-option
+              *ngFor="let country of countries"
+              [(value)]="country.id"
+              >{{ country.name }}</mat-option
+            >
+          </mat-select>
+          <mat-error
+            *ngIf="
+              updateCustomerForm.controls.country.touched &&
+              updateCustomerForm.controls.country.invalid
+            "
+          >
+            Select Country.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 text-md-center">
+        <mat-form-field appearance="outline">
+          <mat-label>Postcode</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="postcode"
+            placeholder="Postcode"
+          />
+          <mat-error
+            *ngIf="
+              updateCustomerForm.controls.postcode.touched &&
+              updateCustomerForm.controls.postcode.invalid
+            "
+          >
+            Postcode is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 text-md-right">
+        <mat-form-field appearance="outline">
+          <mat-label>State</mat-label>
+          <mat-select
+            formControlName="state"
+          >
+            <mat-option value="">Select State</mat-option>
+            <mat-option *ngFor="let state of states" [(value)]="state.id">{{
+              state.name
+            }}</mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="
+              updateCustomerForm.controls.state.touched &&
+              updateCustomerForm.controls.state.invalid
+            "
+          >
+            Select State.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row m-0">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="city"
+            placeholder="City"
+          />
+          <mat-error
+            *ngIf="
+              updateCustomerForm.controls.city.touched &&
+              updateCustomerForm.controls.city.invalid
+            "
+          >
+            City is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 text-md-center">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="email"
+            placeholder="Email"
+          />
+          <mat-error
+            *ngIf="
+              updateCustomerForm.controls.city.touched &&
+              updateCustomerForm.controls.city.invalid
+            "
+          >
+            Email is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 text-md-right">
+        <mat-form-field appearance="outline">
+          <mat-label>Phone</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="phone"
+            placeholder="Phone"
+          />
+          <mat-error
+            *ngIf="
+              updateCustomerForm.controls.phone.touched &&
+              updateCustomerForm.controls.phone.invalid
+            "
+          >
+            City is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row m-0">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Alternate Phone</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="alternate_phone"
+            placeholder="alternate phone"
+          />
+          <!-- <mat-error *ngIf="updateCustomerForm.controls.phone.touched && updateCustomerForm.controls.phone.invalid">
+                        Alternate phone is required.                      
+                    </mat-error> -->
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 text-md-center">
+        <mat-form-field appearance="outline">
+          <mat-label>Company Name</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="company_name"
+            placeholder="company name"
+          />
+          <mat-error
+            *ngIf="
+              updateCustomerForm.controls.phone.touched &&
+              updateCustomerForm.controls.phone.invalid
+            "
+          >
+            Company is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 text-md-right my-auto">
+        <div>
+          <button class="btn btn-primary update-btn" (click)="updateDetails()">
+            Update
+          </button>
+          <button class="btn btn-danger ml-3" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

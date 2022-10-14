@@ -1,0 +1,106 @@
+<div class="text-center">
+  <form (submit)="onClickNext($event)">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-6">
+        <h2 class="font-weight-bold">
+          Select the date and slot you will be sending your inventory
+        </h2>
+      </div>
+    </div>
+    <br />
+
+    <div class="row justify-content-center">
+      <div class="col-lg-5 bdr-g br-10 p-0 w-95 table-responsive">
+        <app-asn-calendar
+          [asnId]="asnId"
+          (slotsEmitter)="setSlotsData($event)"
+        ></app-asn-calendar>
+      </div>
+      <!-- <div class="col-lg-5 br-10 p-0 w-95 text-center" *ngIf="!showSlots">
+        <h2 class="font-weight-bold">{{ selectedDateData }}.</h2>
+      </div> -->
+      <div class="col-lg-5 br-10 p-0 w-95 text-center" *ngIf="showSlots">
+        <mat-form-field appearance="outline" class="w-75">
+          <mat-label>Select Slot Timing</mat-label>
+          <mat-select (selectionChange)="handleSlotChange($event)">
+            <mat-option
+              *ngFor="let slot of slotsList"
+              [value]="slot.slot_id"
+              [disabled]="!slot.slotAvailable"
+            >
+              {{ slot.timing }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Please Select a Slot Timing </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <hr />
+    <div class="d-flex justify-content-between align-items-center">
+      <button mat-stroked-button type="button" (click)="onClickPrev()">
+        Previous
+      </button>
+      <div class="text-muted">{{ formStatus }}</div>
+      <button mat-flat-button class="btn-purple text-light" type="submit">
+        Next
+      </button>
+    </div>
+  </form>
+</div>
+
+<ng-template #zeroProducts>
+  <div
+    class="d-flex align-items-center justify-content-center"
+    style="height: 20vh"
+  >
+    <h2 class="text-muted font-weight-bold">No Products Found</h2>
+  </div>
+</ng-template>
+<ng-template #confirmDialog let-data>
+  <div mat-dialog-title class="mb-3">
+    <button mat-icon-button class="float-right" (click)="dialog.closeAll()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2 class="mb-2">Proceed to complete ASN</h2>
+  </div>
+
+  <mat-dialog-content>
+    <form (submit)="onClickSubmit($event)">
+      <ol type="1">
+        <li>
+          1. You will not be able to edit an ASN after it has been completed.
+        </li>
+        <li>
+          2. You will only be able to reschedule an ASN after it has been
+          completed.
+        </li>
+        <li>3. Make sure all your products have proper barcodes.</li>
+        <li>
+          4. Make sure all the products have MRP, Manufacturing and other
+          relevant information.
+        </li>
+        <li>
+          5. Your shipment will be inwarded by
+          <b>{{ data?.grn_expected_date | date: 'EEE, MMM d, y' }}</b
+          >.
+        </li>
+      </ol>
+
+      <hr />
+      <div class="d-flex justify-content-between align-items-center">
+        <button mat-stroked-button type="button" (click)="onClickDraft()">
+          Save as Draft
+        </button>
+        <button
+          mat-flat-button
+          class="btn-purple text-light"
+          [mat-dialog-close]="true"
+          type="submit"
+        >
+          Complete
+        </button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</ng-template>

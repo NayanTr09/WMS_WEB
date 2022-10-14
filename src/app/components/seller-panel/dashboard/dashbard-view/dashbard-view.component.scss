@@ -1,0 +1,51 @@
+@import '../../../../../assets/scss/main.scss';
+
+.card-container {
+  border-bottom: 0.3rem solid $voilet !important;
+}
+
+.ht {
+  height: 2.3rem;
+}
+
+.card-value {
+  font-size: 1.6rem;
+}
+
+.new-black {
+  color: #333a45;
+}
+
+.card-badge {
+  padding: 0.2rem 0.8rem;
+  font-weight: bold;
+  top: 1rem;
+  right: -0.7rem;
+}
+
+.card-icon {
+  width: 5rem;
+  height: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.up {
+  background-color: #bbffd3;
+  color: #21a851;
+}
+
+.down {
+  background-color: #ffdcdc;
+  color: #dd3838;
+}
+
+.dasboard-tab {
+  & .badge {
+    background-color: #e4dfff;
+    color: $voilet;
+  }
+}
+
+.highcharts-data-table table {
+  width: 100%;
+}

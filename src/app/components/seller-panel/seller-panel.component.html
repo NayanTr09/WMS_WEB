@@ -1,0 +1,65 @@
+<!-- Header section -->
+<mat-toolbar
+  class="border-bottom shadow-sm fixed-top"
+  [ngStyle]="{ 'z-index': (loader.isLoading | async) ? 'unset' : 100 }"
+>
+  <button
+    mat-icon-button
+    class="d-lg-none"
+    (click)="sideNavIsOpen = !sideNavIsOpen"
+  >
+    <mat-icon [svgIcon]="getImageSrc()"></mat-icon>
+  </button>
+  <div class="flex-grow-1 flex-sm-grow-0 text-center">
+    <mat-icon
+      svgIcon="assets:logofull"
+      routerLink="/"
+      class="logofull"
+    ></mat-icon>
+  </div>
+  <div class="flex-sm-grow-1"></div>
+  <app-toolbar></app-toolbar>
+</mat-toolbar>
+<!-- Header section -->
+
+<!-- Body section -->
+<mat-drawer-container fxFill>
+  <mat-drawer
+    #drawer
+    class="sidenav margin-top"
+    (mouseenter)="handleMouseEnter()"
+    (mouseleave)="handleMouseLeave()"
+    [opened]="true"
+    mode="side"
+    [ngClass]="sideNavIsOpen ? 'sidenav-open shadow-lg' : 'sidenav-closed'"
+    [ngStyle]="{ 'z-index': (loader.isLoading | async) ? 'unset' : null }"
+  >
+
+  
+    <app-sidebar
+      [sideNavIsOpen]="sideNavIsOpen"
+      (accordionToggled)="accordionToggledHandler($event)"
+    ></app-sidebar>
+  </mat-drawer>
+
+  <mat-drawer-content class="bg-white margin-top" (click)="close()">
+    <div class="p-md" style="min-height: 90vh; margin-bottom: 3rem">
+      <router-outlet class="mat-typgraphy"> </router-outlet>
+    </div>
+
+    <!-- <ng-container *ngTemplateOutlet="footer"></ng-container> -->
+  </mat-drawer-content>
+</mat-drawer-container>
+<!-- Body section -->
+
+<!-- Footer section -->
+<ng-template #footer>
+  <mat-toolbar class="d-flex justify-content-center align-items-center">
+    <div class="text-center text-muted">
+      <small class="footer-text">
+        Copyright &copy; 2020 Shiprocket Fulfillment. All Rights Reserved.
+      </small>
+    </div>
+  </mat-toolbar>
+</ng-template>
+<!-- Footer section -->

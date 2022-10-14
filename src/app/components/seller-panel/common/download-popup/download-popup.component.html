@@ -1,0 +1,21 @@
+<h1 mat-dialog-title class="mb-0">
+  <button mat-icon-button class="float-right" (click)="onCloseClick()">
+    <mat-icon>close</mat-icon>
+  </button>
+</h1>
+<br />
+<div mat-dialog-content>
+  <div class="text-center mx-3">
+    <h3 class="text-capitalize font-weight-bold">
+      Download {{ data.reportName }} Report
+    </h3>
+    <p class="text-dark" style="font-size: 15px">
+      Your report has been sent to {{ data.email }}
+    </p>
+    <h3 class="font-weight-bold">OR</h3>
+    <p>
+      You can also download the report from Reports panel.
+      <a [routerLink]="[data.endpoint]" (click)="onCloseClick()">Click Here</a>
+    </p>
+  </div>
+</div>

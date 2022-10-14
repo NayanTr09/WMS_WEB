@@ -1,0 +1,10 @@
+<highcharts-chart
+  *ngIf="data.length"
+  [Highcharts]="Highcharts"
+  [options]="chartOptions"
+  style="width: 100%; display: block"
+></highcharts-chart>
+
+<div *ngIf="!data.length" style="min-height: 10rem" class="text-muted">
+  No data available
+</div>

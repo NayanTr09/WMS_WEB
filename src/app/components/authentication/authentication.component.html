@@ -1,0 +1,33 @@
+<div fxFill class="flex-container" fxLayoutAlign="space-around top">
+  <div
+    fxHide.lt-md
+    fxFlex="50"
+    flexFill
+    fxLayoutAlign="center center"
+    class="left-section"
+  >
+    <div class="text-white">
+      <h3 class="font-weight-lighter mb-2">Simplify Your</h3>
+      <h3 class="font-weight-bold mb-2">
+        <strong>Inventory Management,</strong>
+      </h3>
+      <h3 class="font-weight-bold mb-2">
+        <strong>Warehouse </strong> <span class="font-weight-lighter">and</span>
+      </h3>
+      <h3 class="font-weight-bold mb-2">
+        <strong>Logistics Operations</strong>
+      </h3>
+      <img
+        src="../../../assets/images/Guest/register-intro.png"
+        alt=""
+        class="mt-3"
+        style="max-height: 380px"
+      />
+    </div>
+  </div>
+  <div fxFlex.gt-md="50" fxLayoutAlign="center center">
+    <div fxFlex="70" fxFlex.lt-sm="90" class="text-left">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

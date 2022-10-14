@@ -1,0 +1,75 @@
+<app-my-loader></app-my-loader>
+<div class="row">
+  <div class="col-md-12">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent mb-0">
+        <li class="breadcrumb-item">
+          <a routerLink="/fcs/asn" #asnPage class="text-primary">ASN</a>
+        </li>
+        <li class="breadcrumb-item active">Add New</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- <div class="col-md-4 text-right">
+    <button
+      mat-flat-button
+      [disabled]="isAwbAvailable"
+      class="btn btn-purple text-white ml-2"
+      (click)="asnPage.click()"
+    >
+      Finish Later
+    </button>
+  </div> -->
+</div>
+
+<div class="my-5">
+  <app-asn-status-bar
+    [position]="position"
+    [steps]="steps"
+  ></app-asn-status-bar>
+</div>
+
+<div class="row justify-content-center my-5">
+  <div class="col-md-10 border rounded p-3 pt-4">
+    <app-shipping-form
+      *ngIf="position === 1"
+      [asnData]="asnData"
+      (postSave)="tiggerPostSave($event)"
+    ></app-shipping-form>
+
+    <app-add-products-form
+      *ngIf="position === 2"
+      (selectionChange)="changePosition($event)"
+    ></app-add-products-form>
+
+    <app-select-barcodes-form
+      *ngIf="position === 3"
+      (selectionChange)="changePosition($event)"
+    ></app-select-barcodes-form>
+
+    <app-box-configuration-form
+      *ngIf="position === 4"
+      (selectionChange)="changePosition($event)"
+    ></app-box-configuration-form>
+    <app-asn-slots
+      *ngIf="position === 5"
+      (selectionChange)="changePosition($event)"
+    >
+    </app-asn-slots>
+
+    <app-asn-details-form
+      *ngIf="position === 6"
+      [asnData]="asnData"
+      (awbStatus)="updateAwbStatus($event)"
+    ></app-asn-details-form>
+    <app-asn-reschedule
+      *ngIf="position === 7"
+      [asnData]="asnData"
+      [slotDate]="slotDate"
+      [slotId]="slot_id"
+      [slotTimings]="slotTiming"
+      (selectionChange)="changePosition($event)"
+    >
+    </app-asn-reschedule>
+  </div>
+</div>

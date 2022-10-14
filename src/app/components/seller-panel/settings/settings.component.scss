@@ -1,0 +1,47 @@
+@import '../../../../assets/scss/main.scss';
+
+.strong-tab-heading {
+    @extend .text-dark !optional;
+    font-size: $fontSize-sm;
+}
+
+.div-text-heading {
+    flex: 4;
+}
+
+.first-icon-heading{
+    zoom: 1.3;
+}
+
+.progress-info{
+    @extend .br-10 !optional;
+
+    .mat-flat-button{
+        padding: 5px;
+        background-color: $voilet;
+        color: white;
+    }
+}
+
+.nav{
+    @extend .br-10 !optional;
+    overflow: hidden;
+
+}
+
+.nav-link.active {
+    background-color: $light-grey-2;
+    border-radius: unset;
+
+    .strong-tab-heading{
+        color: $voilet;
+    }
+
+    small{
+        font-size: $fontSize-xs;
+    }
+
+    .mat-icon{
+        color: $voilet;
+    }
+}

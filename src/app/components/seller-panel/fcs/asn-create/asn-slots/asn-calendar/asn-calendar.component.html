@@ -1,0 +1,64 @@
+<div class="light d-flex" id="calendar-main">
+  <div class="calendar shadow-sm">
+    <div class="calendar-header">
+      <div
+        style="display: flex; justify-content: flex-start; align-items: center"
+      >
+        <button
+          class="year-change btn"
+          id="prev-year"
+          (click)="handleMonthChange(-1)"
+          [disabled]="prevButtonDisabled"
+          type="button"
+        >
+          &lt;
+        </button>
+        <span class="month-picker">{{ months[month] }}</span>
+        <button
+          class="year-change btn"
+          id="next-year"
+          (click)="handleMonthChange(1)"
+          [disabled]="nextButtonDisabled"
+          type="button"
+        >
+          &gt;
+        </button>
+      </div>
+      <div class="year-picker">
+        <span id="year">{{ year }}</span>
+      </div>
+    </div>
+
+    <div class="calendar-body">
+      <div class="calendar-week-day" id="small-weeks">
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+        <div>Sun</div>
+      </div>
+      <div class="calendar-week-day" id="large-weeks">
+        <div>Monday</div>
+        <div>Tuesday</div>
+        <div>Wednesday</div>
+        <div>Thursday</div>
+        <div>Friday</div>
+        <div>Saturday</div>
+        <div>Sunday</div>
+      </div>
+      <div class="calendar-days">
+        <div
+          *ngFor="let date of arr"
+          class="{{ date.background }} fw-bold c-pointer"
+          (click)="handleSlots(date.slots, date)"
+        >
+          {{ date['date'] }}
+        </div>
+      </div>
+    </div>
+
+    <div class="month-list"></div>
+  </div>
+</div>

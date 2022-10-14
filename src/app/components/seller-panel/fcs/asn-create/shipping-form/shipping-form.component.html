@@ -1,0 +1,334 @@
+<form [formGroup]="shipping" (submit)="onClickSubmit($event)">
+  <div class="row flex-column">
+    <div class="col-md-6 mx-auto text-center">
+      <h2 class="font-weight-bold mb-2">Where are you shipping from ?</h2>
+      <p class="text-muted mb-3">
+        Select the location from which you will be shipping your products. You
+        can also add a new location by selecting New Location in the dropdown.
+      </p>
+      <mat-form-field appearance="outline" class="w-75">
+        <mat-label>Select Pickup Location</mat-label>
+        <mat-select
+          formControlName="fromLocation"
+          (selectionChange)="fromLocationChanged($event)"
+        >
+          <mat-option value="new">New Location</mat-option>
+          <mat-option
+            *ngFor="let address of pickupAddresses"
+            [value]="address.id"
+          >
+            {{ address.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="shipping.get(['fromLocation']).invalid"
+          >Please Select pickup location</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="text-center">
+      <ng-container
+        [ngTemplateOutlet]="showAddNewAddress ? newAddressForm : null"
+      ></ng-container>
+      <hr class="w-75 w-90" />
+    </div>
+
+    <div class="col-md-6 mx-auto text-center">
+      <h2 class="font-weight-bold">Where are you shipping to ?</h2>
+      <mat-form-field appearance="outline" class="w-75">
+        <mat-label>Select Fulfillment Center</mat-label>
+        <mat-select formControlName="toLocation">
+          <mat-option
+            *ngFor="let warehouse of warehouses"
+            [value]="warehouse.code"
+          >
+            {{ warehouse.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="shipping.get(['toLocation']).invalid"
+          >Please Select Fulfillment Center
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <hr />
+  <div class="d-flex align-items-center">
+    <div class="flex-grow-1 text-muted text-center">{{ formStatus }}</div>
+    <button
+      type="submit"
+      mat-stroked-button
+      class="ml-auto btn-purple text-light"
+    >
+      Next
+    </button>
+  </div>
+</form>
+
+<ng-template #newAddressForm>
+  <form [formGroup]="newShippingAddress">
+    <div class="container bdr-g br-10 px-4 pt-4 pb-1 w-75 w-90">
+      <div class="row">
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label> Address Nickname </mat-label>
+            <input
+              matInput
+              placeholder="Address Nickname"
+              formControlName="pickup_location"
+              required
+            />
+            <mat-icon
+              class="pointer text-muted"
+              matSuffix
+              matTooltip="It acts as a nickname for your pick up address. We recommend you to enter a value which can be easily recalled."
+              matTooltipPosition="right"
+              >info</mat-icon
+            >
+            <mat-error
+              *ngIf="
+                newShippingAddress.get('pickup_location').hasError('maxlength')
+              "
+            >
+              Address nickname may not be greater than 8 characters
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Contact Name</mat-label>
+            <input
+              matInput
+              placeholder="Contact Name"
+              formControlName="name"
+              required
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="row justify-content-center align-items-center">
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Phone</mat-label>
+                <input
+                  matInput
+                  type="tel"
+                  placeholder="Enter 10 digit mobile number"
+                  formControlName="phone"
+                  required
+                  (blur)="onPhoneBlur($event)"
+                />
+                <mat-icon
+                  class="pointer text-muted"
+                  *ngIf="!phoneVerified"
+                  matSuffix
+                  matTooltip="Enter contact details of your warehouse manager/operations head available at this pickup location"
+                  matTooltipPosition="right"
+                  >info</mat-icon
+                >
+                <mat-icon
+                  matSuffix
+                  *ngIf="phoneVerified"
+                  matTooltip="Phone verified"
+                  class="text-success pointer"
+                  >verified</mat-icon
+                >
+                <mat-error
+                  class="text-nowrap"
+                  *ngIf="newShippingAddress.get('phone').hasError('pattern')"
+                >
+                  Phone no. is not valid. It should start with '9/8/7/6'
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="!hideOtp">
+            <div class="col-8">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>OTP</mat-label>
+                <input
+                  matInput
+                  type="tel"
+                  placeholder="OTP"
+                  formControlName="otp"
+                  required
+                />
+
+                <span matSuffix class="text-success" *ngIf="time > 0"
+                  >0:{{ time }}</span
+                >
+                <mat-error
+                  *ngIf="newShippingAddress.get('otp').hasError('minlength')"
+                >
+                  OTP should be 6 digit number
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-4 px-0" *ngIf="!time" [hidden]="phoneVerified">
+              <small>Didn't get OTP?</small>
+              <button
+                mat-stroked-button
+                class="text-primary"
+                type="button"
+                (click)="sendOtpRequest()"
+              >
+                Re-send OTP
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Alternate Phone</mat-label>
+            <input
+              matInput
+              placeholder="Phone"
+              formControlName="alternate_phone"
+            />
+            <mat-icon
+              class="pointer text-muted"
+              matSuffix
+              matTooltip="Provide a secondary contact number for your buyers (For example: Customer Care Number)"
+              matTooltipPosition="right"
+              >info</mat-icon
+            >
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Address Line 1</mat-label>
+            <input
+              matInput
+              placeholder="Address"
+              formControlName="address"
+              required
+            />
+            <mat-error
+              *ngIf="newShippingAddress.get('address').hasError('minlength')"
+            >
+              Address can't be less than 10 characters
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Address Line 2</mat-label>
+            <input
+              matInput
+              placeholder="Address 2"
+              formControlName="address_2"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Pincode</mat-label>
+            <input
+              matInput
+              type="tel"
+              placeholder="Pincode"
+              formControlName="pin_code"
+              required
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>City</mat-label>
+            <input
+              matInput
+              placeholder="City"
+              formControlName="city"
+              required
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>State</mat-label>
+            <input
+              matInput
+              placeholder="State"
+              formControlName="state"
+              required
+            />
+          </mat-form-field>
+        </div>
+        <!-- <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Country</mat-label>
+            <input
+              matInput
+              placeholder="Country"
+              formControlName="country"
+              required
+            />
+          </mat-form-field>
+        </div> -->
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              placeholder="email"
+              formControlName="email"
+              required
+            />
+            <mat-error
+              *ngIf="newShippingAddress.get('email').hasError('email')"
+            >
+              The email must be a valid email address
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>GSTIN</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="gstin"
+              formControlName="gstin"
+              required
+            />
+            <mat-error
+            *ngIf="newShippingAddress.get('gstin').hasError('gstin')"
+          >
+            GST No. must be a valid
+          </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- <div class="row" [@openClose]="isOpen ? 'open' : 'closed'" class="">
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline">
+            <mat-label>OTP</mat-label>
+            <input
+              matInput
+              placeholder="OTP"
+              formControlName="otp"
+              required
+            />
+          </mat-form-field>
+        </div>
+      </div> -->
+    </div>
+    <div class="container my-3 d-flex align-items-start w-75 w-90">
+      <mat-checkbox formControlName="supplier_check"
+        >Mark this as Supplier address</mat-checkbox
+      >
+      &nbsp;
+      <mat-icon
+        class="pointer text-muted"
+        matTooltip=" If this address is a supplier’s address, please check this box. Invoices are not generated in case of Supplier’s Address. Please ask your supplier to place an invoice in the shipment."
+        matTooltipPosition="right"
+        >info</mat-icon
+      >
+    </div>
+  </form>
+</ng-template>

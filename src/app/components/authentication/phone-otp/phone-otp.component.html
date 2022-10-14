@@ -1,0 +1,31 @@
+<span *ngIf="viewVerifyPhone">
+  <form [formGroup]="phoneForm">
+      <mat-form-field fxFill class="mt-sm">
+        <mat-label>Enter Phone Number</mat-label>
+        <input matInput required formControlName='phone'>
+        <mat-error *ngIf="phoneForm.controls.phone.errors?.required"></mat-error>
+        <mat-error *ngIf="phoneForm.get('phone').errors?.apiError">{{ phoneForm.get('phone').errors?.apiError }}</mat-error>
+      </mat-form-field>
+      <button fxFill class="btn-action btn-success" mat-flat-button (click)="verifyPhone()">Verify My Phone</button>
+    </form>
+</span>
+<span *ngIf="viewVerifyOTP && !viewVerifyPhone">
+  <p class="guest-intro">
+    Hi {{userName}}<br>
+    <small>You will receive a SMS containing the verification code<br>
+        on your number +91-{{ phoneForm.controls.phone.value }}
+    </small>
+  </p>
+    <form [formGroup]="otpForm">
+      <mat-form-field fxFill class="mt-sm">
+        <mat-label>Enter OTP</mat-label>
+        <input matInput required formControlName='otp'>
+        
+        <mat-error *ngIf="otpForm.controls.otp.errors?.required"></mat-error>
+        <mat-error *ngIf="otpForm.get('otp').errors?.invalidNumber">{{ otpForm.get('otp').errors?.invalidNumber }}</mat-error>
+      </mat-form-field>
+      <a (click)="viewVerifyPhone = true">Change Mobile Number</a>
+      <button fxFill class="btn-action btn-success" mat-flat-button (click)="verifyOTP()">Verify My Phone</button>
+    </form>
+  
+</span>

@@ -1,0 +1,226 @@
+@import '../../../../../assets/scss/main.scss';
+
+.acnt-steps {
+  li {
+    padding: 10px 10px 10px 0;
+    font-size: 16px;
+    > span.icon-checked {
+      margin-right: 10px;
+    }
+    .material-icons {
+      margin-right: 10px;
+    }
+  }
+}
+.acnt-steps-wrap {
+  padding: 25px;
+
+  @media screen and (max-width: 768px) {
+    border-left: none;
+    border-radius: 6px 6px 0 0;
+    padding: 15px;
+    h2 {
+      padding-top: 0 !important;
+    }
+    .mat-progress-bar {
+      height: 5px;
+    }
+    .acnt-steps {
+      margin-top: 10px !important;
+      li {
+        text-align: center;
+        width: 25%;
+        font-size: 12px;
+        display: inline-block;
+        font-weight: bold;
+        line-height: normal;
+        padding-right: 5px;
+
+        span {
+          width: 100%;
+          display: block;
+          &:first-child {
+            margin-bottom: 8px;
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
+}
+.uploaded-warehouse {
+  padding: 20px;
+}
+.mat-progress-bar {
+  height: 10px;
+
+  border-radius: 4px;
+}
+::ng-deep .mat-horizontal-stepper-header-container {
+  display: none !important;
+}
+.btn-stepper {
+  //border: 1px solid #3f51b5;
+  background: #3f51b5;
+  color: #fff;
+}
+
+.chnl-selector {
+  position: relative;
+  img {
+    width: 100%;
+  }
+  .checked {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    display: none;
+  }
+  &:hover,
+  .active {
+    .checked {
+      display: block;
+    }
+  }
+}
+::ng-deep .welcome-modal {
+  width: 80%;
+  max-width: 700px !important;
+  max-height: 90vh;
+  .modal-content {
+    padding: 40px 20px;
+  }
+  span.line {
+    max-width: 90px;
+    border-top: 1px solid #333;
+    display: inline-block;
+    width: 100%;
+    margin: 25px 0;
+  }
+  .btn-action {
+    width: 100%;
+    max-width: 200px;
+    padding: 5px 0;
+    margin: 10px 0;
+    font-size: 18px;
+  }
+  h3 {
+    font-size: 40px;
+  }
+  h4 {
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .appearance-purple {
+    & .mat-form-field-outline-thick {
+      color: $voilet !important;
+    }
+  }
+
+  .form-control {
+    max-width: 360px;
+    padding: 14px;
+    background: none;
+    font-size: 15px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .warehouse-select {
+    width: 7rem;
+    margin-bottom: 1rem;
+    font-size: 12px;
+    .check-icon {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+  }
+}
+.modal-session {
+  max-width: 200px;
+}
+.uploaded-warehouse {
+  .icon-warehouse {
+    font-size: 30px;
+    margin: 0 10px;
+  }
+}
+
+:host ::ng-deep .mat-horizontal-content-container {
+  padding: 0 !important;
+}
+::ng-deep .channel-dialog {
+  .channel-form {
+    max-height: 60vh;
+    display: block;
+    float: left;
+    width: 100%;
+    overflow-y: auto;
+    padding: 0 10px;
+  }
+
+  .icon-close {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+  }
+}
+
+::ng-deep {
+  .setupSuccess {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid green;
+    color: green;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+  }
+  .modal-setup-done {
+    & .mat-dialog-container {
+      padding: 3rem;
+    }
+    // min-height: 400px;
+    // display:flex;
+    // align-items: center;
+    // justify-content: center;
+  }
+}
+
+.bullet {
+  text-align: center;
+  display: inline-block;
+  font-size: small;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.87);
+}
+
+.bullet-done {
+  background-color: $light-green;
+}
+
+.bullet-next {
+  background-color: $blue1;
+}
+
+.company-logo {
+  width: 36%;
+  text-align: center;
+  background-color: lightgray;
+
+  & .close {
+    top: -0.3rem;
+    right: 0.2rem;
+  }
+}
+
+::ng-deep .backdrop-container {
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.5);
+}

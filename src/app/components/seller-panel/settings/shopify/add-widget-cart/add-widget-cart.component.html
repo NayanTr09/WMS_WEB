@@ -1,0 +1,108 @@
+<app-my-loader></app-my-loader>
+<div class="main m-auto">
+  <form>
+    <div class="navbar d-flex justify-content-around pt-4">
+      <h2 class="font-weight-bold">4. Place Badges on Cart Detail Page</h2>
+    </div>
+
+    <main class="d-flex justify-content-around">
+      <div class="left">
+        <div class="info">
+          <p>
+            Sometimes themes are not compatible with auto-placement, so please
+            click “Preview your Store” before selecting “I want Shiprocket to
+            place badge for me.”
+          </p>
+          <p>
+            <b>Note:</b>
+            If Shopify cant place badges on your store, please select “I dont
+            want Shiprocket to place badges for me” and follow the provided
+            instruction.
+          </p>
+          <p class="text-danger" *ngIf="error">
+            <!-- {{ error |  }} -->
+            Widget cannot be added automatically. Please refer the docs for
+            manual installation
+            <a
+              href="https://drive.google.com/file/d/1H4cP1ErGJP40SDbhrTkRzNb7UF0CLG72/view"
+              target="_blank"
+            >
+              here</a
+            >
+            or contact
+            <a href="mailto:support@shiprocket.in">support@shiprocket.in</a> for
+            more help.
+          </p>
+        </div>
+        <!-- <p *ngIf="error">{{ error }}</p> -->
+        <div style="margin-right: 13px">
+          <label
+            class="font-weight-bold d-flex align-items-center"
+            for="retryToggleSwitch"
+          >
+            I want Shiprocket to place badges for me
+            <div class="custom-control custom-switch ml-5">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="retryToggleSwitch"
+                (change)="setShowCode($event)"
+                [checked]="enableCartWidget"
+              />
+              <span class="custom-control-label"></span>
+            </div>
+          </label>
+        </div>
+        <div *ngIf="enableCartWidget" class="ml-3">
+          <small
+            style="
+              margin-top: 1em;
+              line-height: 1.5;
+              color: #333;
+              display: block;
+            "
+            ><b>Pro-Tip</b> - You can add
+            <span class="sample-code" [innerText]="sampleCode"></span>
+            on your template file to show the widget wherever you want. For any
+            queries, please contact
+            <a href="mailto:support@shiprocket.in">support@shiprocket.in</a>
+          </small>
+        </div>
+      </div>
+      <div class="right">
+        <img
+          src="../../../../../assets/images/img/logo/pdp-widget-img.png"
+          id="right-panel"
+        />
+      </div>
+    </main>
+    <hr />
+    <footer class="d-flex justify-content-between mx-5 my-4">
+      <button
+        mat-flat-button
+        type="button"
+        class="my-1 btn-white text-purple px-5"
+        (click)="onPrevious()"
+      >
+        Previous
+      </button>
+      <a
+        *ngIf="enableCartWidget"
+        mat-flat-button
+        [href]="previewUrl"
+        target="_blank"
+        class="my-1 btn-purple text-white px-5"
+      >
+        Preview
+      </a>
+      <button
+        mat-flat-button
+        type="submit"
+        class="my-1 btn-purple text-white px-5"
+        (click)="onSubmit()"
+      >
+        Finish
+      </button>
+    </footer>
+  </form>
+</div>

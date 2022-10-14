@@ -1,0 +1,10 @@
+<highcharts-chart
+  *ngIf="warehouseData.length"
+  [Highcharts]="Highcharts"
+  [options]="chartOptions"
+  style="width: 100%; display: block"
+></highcharts-chart>
+
+<div *ngIf="!warehouseData.length" style="min-height: 25rem" class="text-muted">
+  No data available
+</div>

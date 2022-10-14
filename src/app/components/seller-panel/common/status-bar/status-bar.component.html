@@ -1,0 +1,19 @@
+<ul class="timeline">
+  <li
+    class="li"
+    *ngFor="let option of objectKeys(availableOptions); let i = index"
+    [ngClass]="{ complete: availableOptions[option] }"
+  >
+    <div class="timestamp">
+      <small class="text-capitalize" *ngIf="availableOptions[option]">{{
+        option
+      }}</small>
+    </div>
+    <div class="status"></div>
+    <div class="timestamp ts-bottom">
+      <small class="text-capitalize" *ngIf="!availableOptions[option]">{{
+        option
+      }}</small>
+    </div>
+  </li>
+</ul>

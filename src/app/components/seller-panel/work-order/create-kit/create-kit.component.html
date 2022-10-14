@@ -1,0 +1,488 @@
+<ng-container
+  [ngTemplateOutlet]="
+    activeScreen === 'warehouse_screen' ? warehouse_screen : null
+  "
+></ng-container>
+
+<ng-container
+  [ngTemplateOutlet]="activeScreen === 'item_screen' ? item_screen : null"
+></ng-container>
+
+<ng-container
+  [ngTemplateOutlet]="activeScreen === 'product_screen' ? product_screen : null"
+></ng-container>
+
+<ng-container
+  [ngTemplateOutlet]="activeScreen === 'final_screen' ? final_screen : null"
+></ng-container>
+
+<ng-template #warehouse_screen>
+  <app-my-loader></app-my-loader>
+  <div class="pl-sm pr-sm mb-3">
+    <!-- <h1 class="mb-2"><strong>Work Order</strong></h1> -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent mb-0">
+        <li class="breadcrumb-item">
+          <a routerLink="/work-order/kitting" class="text-primary"
+            >Work Order</a
+          >
+        </li>
+        <li class="breadcrumb-item active">Create New Kit</li>
+      </ol>
+    </nav>
+    <p class="text-muted ml-3">
+      Select the fulfilment centre for which you'd like to create a kit
+    </p>
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-10 bdr-g br-10 p-4">
+        <form [formGroup]="createKitForm">
+          <div
+            class="btn-group-toggle d-flex justify-content-around flex-wrap"
+            data-toggle="buttons"
+          >
+            <ng-container
+              *ngIf="warehouses | async as warehouseList; else loading"
+            >
+              <ng-container *ngFor="let location of warehouseList?.data">
+                <label
+                  class="btn br-10 mr-3 mb-3 position-relative px-4 locationCard"
+                  [ngClass]="{ active: isSelected(location.warehouse_code) }"
+                >
+                  <mat-icon class="position-absolute fcBtnIcon">{{
+                    isSelected(location.warehouse_code) ? 'check_circle' : ''
+                  }}</mat-icon>
+                  <br />
+                  <input
+                    type="radio"
+                    formControlName="warehouse_code"
+                    [value]="location.warehouse_code"
+                  />
+                  <div class="mb-3">
+                    <mat-icon
+                      class="text-muted fcHomeIcon"
+                      [svgIcon]="getIcon(location.name)"
+                    ></mat-icon>
+                  </div>
+
+                  {{ location.name.split(' ')[0] | titlecase }}
+                </label>
+              </ng-container>
+            </ng-container>
+          </div>
+
+          <hr />
+          <div class="d-flex justify-content-end align-items-center">
+            <button
+              mat-stroked-button
+              class="btn-purple text-light"
+              type="button"
+              (click)="onSubmitWarehouse($event)"
+            >
+              Next
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #item_screen>
+  <div class="pl-sm pr-sm mb-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent mb-0">
+        <li class="breadcrumb-item">
+          <a routerLink="/work-order/kitting" class="text-primary"
+            >Work Order</a
+          >
+        </li>
+        <li class="breadcrumb-item active">Create New Kit</li>
+      </ol>
+    </nav>
+    <p class="text-muted ml-3">
+      Select the items that you'd want to add to your kit (You may select more
+      than one)
+    </p>
+  </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-10 bdr-g br-10 p-4">
+        <div class="row justify-content-center mb-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Search and add Kit Items</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <input
+                matInput
+                type="search"
+                #productSearch
+                [matAutocomplete]="productAutocomplete"
+                [formControl]="autocomplete"
+                (input)="searchProduct($event)"
+              />
+              <mat-autocomplete
+                #productAutocomplete="matAutocomplete"
+                (optionSelected)="onOptionSelected($event)"
+                [displayWith]="formatInputValue.bind(this)"
+              >
+                <ng-template #productLoading>
+                  <mat-option
+                    *ngIf="productSearch.value.length > 2"
+                    class="is-loading"
+                    >Loading...</mat-option
+                  >
+                </ng-template>
+
+                <ng-container
+                  *ngIf="
+                    productSearchedResult | async as options;
+                    else productLoading
+                  "
+                >
+                  <mat-option *ngFor="let option of options" [value]="option">
+                    {{ option.sku }}
+                  </mat-option>
+                </ng-container>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <form [formGroup]="createKitForm" (submit)="onClickSubmit($event)">
+          <ng-container *ngIf="totalProducts.length; else zeroProducts">
+            <div class="row justify-content-center">
+              <div
+                class="col-lg-10 bdr-g br-10 p-0 w-95 mx-3 mx-lg-auto table-responsive"
+              >
+                <table class="table table-sm text-left mb-0 rm-top-border">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        class="text-center"
+                        style="width: 10%"
+                      ></th>
+                      <th scope="col" class="" style="width: 60%">Product</th>
+                      <th scope="col" style="width: 30%">Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      formArrayName="products"
+                      *ngFor="
+                        let product of totalProducts.controls;
+                        let i = index
+                      "
+                    >
+                      <tr [formGroupName]="i">
+                        <td class="align-middle text-center">
+                          <button
+                            class="close float-none text-red opacity-none"
+                            (click)="removeProduct(i)"
+                          >
+                            <mat-icon>delete_outline</mat-icon>
+                          </button>
+                        </td>
+                        <td class="align-middle">
+                          {{ product.value.name }}
+                        </td>
+                        <td class="align-right">
+                          <mat-form-field
+                            style="width: 6rem"
+                            class="input-product"
+                            appearance="outline"
+                            floatLabel="never"
+                          >
+                            <input
+                              matInput
+                              type="number"
+                              formControlName="quantity"
+                            />
+                            <!-- <mat-error
+                              class="text-no-wrap"
+                              *ngIf="
+                                totalProducts.controls[
+                                  i
+                                ].controls.quantity.hasError('required')
+                              "
+                            >
+                              Quantity is <strong>required</strong>
+                            </mat-error> -->
+                          </mat-form-field>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </ng-container>
+          <br />
+          <hr />
+          <div class="d-flex justify-content-between align-items-center">
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="onClickPrev('warehouse_screen')"
+            >
+              Previous
+            </button>
+            <button
+              mat-stroked-button
+              class="btn-purple text-light"
+              type="submit"
+            >
+              Next
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #product_screen>
+  <div class="pl-sm pr-sm mb-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent mb-0">
+        <li class="breadcrumb-item">
+          <a routerLink="/work-order/kitting" class="text-primary"
+            >Work Order</a
+          >
+        </li>
+        <li class="breadcrumb-item active">Create New Kit</li>
+      </ol>
+    </nav>
+    <p class="text-muted ml-3">
+      Name the kit, select the SKU that would become your kit SKU. (This will be
+      the SKU for which orders would be received)
+    </p>
+  </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-10 bdr-g br-10 p-4">
+        <div class="row justify-content-center mb-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Search and add Kit SKU</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <input
+                matInput
+                type="search"
+                #productKitSearch
+                [matAutocomplete]="productKitAutocomplete"
+                [formControl]="autocompleteKit"
+                (input)="searchKitProduct($event)"
+              />
+              <mat-autocomplete
+                #productKitAutocomplete="matAutocomplete"
+                (optionSelected)="onOptionSelectedKit($event)"
+                [displayWith]="formatInputKitValue.bind(this)"
+              >
+                <ng-template #productLoading>
+                  <mat-option
+                    *ngIf="productKitSearch.value.length > 2"
+                    class="is-loading"
+                    >Loading...</mat-option
+                  >
+                </ng-template>
+
+                <ng-container
+                  *ngIf="
+                    productKitSearchedResult | async as options;
+                    else productLoading
+                  "
+                >
+                  <mat-option *ngFor="let option of options" [value]="option">
+                    {{ option.sku }}
+                  </mat-option>
+                </ng-container>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <form [formGroup]="createKitForm" (submit)="onClickSubmitKit($event)">
+          <ng-container *ngIf="totalKitProducts.length; else zeroKitProducts">
+            <div class="row justify-content-center">
+              <div
+                class="col-lg-10 bdr-g br-10 p-0 w-95 mx-3 mx-lg-auto table-responsive"
+              >
+                <table class="table table-sm text-left mb-0 rm-top-border">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        class="text-center"
+                        style="width: 10%"
+                      ></th>
+                      <th scope="col" style="width: 50%">Product</th>
+                      <th scope="col" style="width: 20%">Max Kit</th>
+                      <th scope="col" style="width: 20%">Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      formArrayName="kitproducts"
+                      *ngFor="
+                        let kitproduct of totalKitProducts.controls;
+                        let i = index
+                      "
+                    >
+                      <tr [formGroupName]="i">
+                        <td class="align-middle text-center">
+                          <button
+                            class="close float-none text-red opacity-none"
+                            (click)="removeKitProduct(i)"
+                          >
+                            <mat-icon>delete_outline</mat-icon>
+                          </button>
+                        </td>
+                        <td class="align-middle">
+                          {{ kitproduct.value.name }}
+                        </td>
+                        <td class="align-middle">
+                          {{ maxKit }}
+                        </td>
+                        <td class="align-middle">
+                          <mat-form-field
+                            style="width: 6rem"
+                            class="input-product"
+                            appearance="outline"
+                            floatLabel="never"
+                          >
+                            <input
+                              matInput
+                              type="number"
+                              formControlName="quantity"
+                            />
+
+                            <mat-error
+                              *ngIf="
+                                totalKitProducts.controls[i].controls.quantity >
+                                maxKit
+                              "
+                            >
+                              Quantity exceeds max kit quantity
+                            </mat-error>
+                          </mat-form-field>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-10 pl-0 mt-2">
+                <small class="text-muted">
+                  Note: You can only create quantity equal to or less than the
+                  max kit quantity
+                </small>
+              </div>
+            </div>
+          </ng-container>
+          <br />
+          <hr />
+          <div class="d-flex justify-content-between align-items-center">
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="onClickPrev('item_screen')"
+            >
+              Previous
+            </button>
+            <button
+              mat-stroked-button
+              class="btn-purple text-light"
+              type="submit"
+            >
+              Next
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #final_screen>
+  <app-my-loader></app-my-loader>
+  <div class="pl-sm pr-sm mb-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent mb-0">
+        <li class="breadcrumb-item">
+          <a routerLink="/work-order/kitting" class="text-primary"
+            >Work Order</a
+          >
+        </li>
+        <li class="breadcrumb-item active">Create New Kit</li>
+      </ol>
+    </nav>
+    <p class="text-muted ml-3">Confirm and create your kit</p>
+  </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-10 bdr-g br-10 p-4">
+        <div class="row justify-content-center align-items-center mb-3 pointer">
+          <div class="col-1 text-center"><strong>Kit</strong></div>
+          <div
+            class="col-5 br-6 bdr-g d-flex align-items-center p-2"
+            (click)="showItems = !showItems"
+          >
+            <ng-container *ngFor="let kit of totalKitProducts.value">
+              <div class="ml-2">{{ kit.sku }}</div>
+              <div class="ml-auto d-flex align-items-center">
+                {{ kit.quantity }} Qty
+                <mat-icon matPrefix>{{
+                  showItems ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                }}</mat-icon>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <ng-container *ngIf="showItems">
+          <ng-container *ngFor="let item of totalProducts.value; let i = index">
+            <div
+              class="row justify-content-center align-items-center"
+              [@fadeInOut]
+            >
+              <div class="col-1 text-center">
+                <strong>Item {{ i + 1 }}</strong>
+              </div>
+              <div
+                class="col-5 br-6 d-flex align-items-center p-2 px-3 shadow-sm border"
+              >
+                <span>{{ item.sku }}</span>
+                <span class="ml-auto">{{ item.quantity }} Item/Kit</span>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <hr class="mt-5" />
+        <div class="d-flex justify-content-between align-items-center">
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="onClickPrev('product_screen')"
+          >
+            Previous
+          </button>
+          <button
+            mat-stroked-button
+            class="btn-purple text-light"
+            type="button"
+            (click)="onClickSubmitForm($event)"
+          >
+            Finish
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loading>loading...</ng-template>

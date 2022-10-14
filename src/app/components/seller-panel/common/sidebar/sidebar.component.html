@@ -1,0 +1,60 @@
+<mat-nav-list>
+  <span *ngFor="let item of menu">
+    <ng-container
+      [ngTemplateOutlet]="item.subNav ? withSubNav : withoutSubNav"
+      [ngTemplateOutletContext]="{ item: item }"
+    ></ng-container>
+  </span>
+</mat-nav-list>
+
+<ng-template #withoutSubNav let-item="item">
+  <a
+    [routerLink]="[item.route]"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <mat-list-item [ngClass]="{ active: checkRoute(item.route) }">
+      <span class="mx-2">
+        <mat-icon [svgIcon]="item.iconName"></mat-icon>
+      </span>
+      <span class="side-nav-text ml-xs">{{ item.displayName }}</span>
+    </mat-list-item>
+  </a>
+</ng-template>
+
+<ng-template #withSubNav let-item="item">
+  <span>
+    <mat-accordion class="sidenav-menu">
+      <mat-expansion-panel
+        [expanded]="!sideNavIsOpen ? sideNavIsOpen : null"
+        [ngClass]="{ selected: checkRoute(item.route) }"
+      >
+        <mat-expansion-panel-header (click)="toggleAccordion()">
+          <mat-panel-title>
+            <span class="mx-2">
+              <mat-icon [svgIcon]="item.iconName"></mat-icon>
+            </span>
+
+            <span class="side-nav-text ml-xs">{{ item.displayName }}</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <a
+          *ngFor="let child of item.subNav"
+          [routerLink]="[item.route, child.route]"
+        >
+          <mat-list-item [ngClass]="{ active: checkChildRoute(child.route) }">
+            <div
+              (click)="navigateToPage(child)"
+              fxLayout="row"
+              class="side-nav-text"
+              fxLayoutAlign="space-between center"
+            >
+              <mat-icon [svgIcon]="child.iconName" class="mx-2"></mat-icon>
+              {{ child.displayName }}
+            </div>
+          </mat-list-item>
+        </a>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </span>
+</ng-template>

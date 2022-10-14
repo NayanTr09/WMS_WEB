@@ -1,0 +1,68 @@
+<div class="pl-sm pr-sm mb-3">
+  <h1 class="mb-2">Catalog</h1>
+</div>
+<div class="card border-0">
+  <nav mat-tab-nav-bar class="pl-sm pr-sm">
+    <a
+      mat-tab-link
+      *ngFor="let link of navLinks"
+      [routerLink]="link.link"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="rla.isActive"
+      >{{ link.label }}
+    </a>
+
+    <button
+      *ngIf="isActive('freebie-list')"
+      class="m-2 ml-auto btn-purple"
+      (click)="navigateTo('product/create-freebie')"
+      mat-flat-button
+      title="create new freebie"
+    >
+      Add New
+    </button>
+    <button
+      *ngIf="isActive('product-list')"
+      class="m-2 ml-auto bg-grey"
+      mat-flat-button
+      [matMenuTriggerFor]="import"
+    >
+      Import
+      <mat-icon>expand_more</mat-icon>
+    </button>
+
+    <button
+      *ngIf="isActive('product-list')"
+      class="m-2 btn-purple"
+      mat-flat-button
+      [matMenuTriggerFor]="addNew"
+    >
+      Add New
+    </button>
+  </nav>
+  <app-my-loader></app-my-loader>
+  <router-outlet></router-outlet>
+</div>
+
+<mat-menu #addNew="matMenu" xPosition="before">
+  <button mat-menu-item (click)="handleClick(actions.product)">
+    <mat-icon svgIcon="assets:product"></mat-icon>
+    Product
+  </button>
+  <button mat-menu-item (click)="handleClick(actions.mapped)">
+    <mat-icon svgIcon="assets:mapped"></mat-icon>
+    Mapping
+  </button>
+  <button mat-menu-item (click)="handleClick(actions.combo)">
+    <mat-icon svgIcon="assets:combo"></mat-icon>
+    Combo
+  </button>
+</mat-menu>
+
+<mat-menu #import="matMenu" xPosition="before">
+  <button mat-menu-item (click)="allImportClicked()">All Products</button>
+  <button mat-menu-item (click)="channelProductsClicked()">
+    Channel Products
+  </button>
+</mat-menu>

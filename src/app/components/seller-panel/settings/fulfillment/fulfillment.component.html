@@ -1,0 +1,367 @@
+<app-my-loader></app-my-loader>
+
+<div class="row mx-md-3 mt-3 mt-sm-0">
+  <div class="col-12 border fulfillment-section rounded p-3">
+    <h1 class="nav-heading"><strong>Fulfillment</strong></h1>
+
+    <mat-accordion displayMode="flat" hideToggle>
+      <mat-expansion-panel [expanded]="true" #wrapper>
+        <mat-expansion-panel-header>
+          <mat-panel-title
+            class="nav-subheading"
+            [ngClass]="{ 'text-purple': wrapper._expanded }"
+          >
+            <strong>Configure Wrapper URL</strong>
+          </mat-panel-title>
+          <mat-icon *ngIf="!wrapper._expanded">add</mat-icon>
+          <mat-icon *ngIf="wrapper._expanded">remove</mat-icon>
+        </mat-expansion-panel-header>
+        <form
+          [formGroup]="wrapperConfigForm"
+          (submit)="submitWrapperConfig($event)"
+        >
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Callback URL</mat-label>
+            <input matInput formControlName="url" required appValidator="url" />
+            <mat-error
+              *ngIf="
+                wrapperConfigForm.controls.url.touched &&
+                wrapperConfigForm.controls.url.invalid
+              "
+            >
+              <span *ngIf="wrapperConfigForm.controls.url.errors.required"
+                >Callback Url <strong>required</strong></span
+              >
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Header Key</mat-label>
+            <input matInput formControlName="h_key" appValidator="html" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Header Value</mat-label>
+            <input matInput formControlName="h_val" appValidator="html" />
+          </mat-form-field>
+          <div class="d-flex flex-wrap">
+            <div class="">
+              <label class="font-weight-bold d-flex" for="retryToggleSwitch"
+                >Auto Retry Orders
+                <div class="custom-control custom-switch ml-5">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="retryToggleSwitch"
+                    [(ngModel)]="autoRetry"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  <span class="custom-control-label"></span>
+                </div>
+              </label>
+            </div>
+          </div>
+          <hr />
+
+          <div class="text-center">
+            <button
+              mat-flat-button
+              type="submit"
+              class="float-sm-right my-2 btn-purple text-white py-1 px-5"
+            >
+              Save Wrapper Configration
+            </button>
+          </div>
+        </form>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="false" #IAUrl>
+        <mat-expansion-panel-header>
+          <mat-panel-title
+            class="nav-subheading"
+            [ngClass]="{ 'text-purple': IAUrl._expanded }"
+          >
+            <strong>Inventory Adjustment URL</strong>
+          </mat-panel-title>
+          <mat-icon *ngIf="!IAUrl._expanded">add</mat-icon>
+          <mat-icon *ngIf="IAUrl._expanded">remove</mat-icon>
+        </mat-expansion-panel-header>
+        <form
+          class="mt-3"
+          [formGroup]="IAUrlForm"
+          (submit)="submitIAConfig($event)"
+        >
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>URL</mat-label>
+            <input matInput formControlName="url" required appValidator="url" />
+            <mat-error
+              *ngIf="
+                IAUrlForm.controls.url.touched && IAUrlForm.controls.url.invalid
+              "
+            >
+              <span *ngIf="IAUrlForm.controls.url.errors.required"
+                >Url <strong>required</strong></span
+              >
+            </mat-error>
+          </mat-form-field>
+          <ng-container formGroupName="configuration">
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Header Key</mat-label>
+                  <input
+                    matInput
+                    formControlName="authKey"
+                    appValidator="html"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Header Value</mat-label>
+                  <input
+                    matInput
+                    formControlName="authValue"
+                    appValidator="html"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </ng-container>
+          <hr />
+
+          <div class="text-center">
+            <button
+              mat-flat-button
+              type="submit"
+              class="float-sm-right my-2 btn-purple text-white py-1 px-5"
+            >
+              Save Configuration
+            </button>
+          </div>
+        </form>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel #barcode>
+        <mat-expansion-panel-header>
+          <mat-panel-title
+            class="nav-subheading"
+            [ngClass]="{ 'text-purple': barcode._expanded }"
+          >
+            <strong>Barcode Settings</strong>
+          </mat-panel-title>
+          <mat-icon *ngIf="!barcode._expanded">add</mat-icon>
+          <mat-icon *ngIf="barcode._expanded">remove</mat-icon>
+        </mat-expansion-panel-header>
+        <div class="d-flex justify-content-between">
+          <mat-form-field appearance="outline">
+            <mat-label>Template</mat-label>
+            <mat-select
+              [(ngModel)]="barcodeSettings.template_type"
+              (selectionChange)="updateBarcodeSize($event)"
+            >
+              <mat-option [value]="1">Thermal Roll</mat-option>
+              <mat-option [value]="2">A4(210mm x 297mm)</mat-option>
+              <mat-option [value]="3">Custom CSV Download</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Type</mat-label>
+            <mat-select
+              [(ngModel)]="barcodeSettings.barcode_type"
+              [disabled]="isTypeDisabled"
+              (selectionChange)="getOptions(true)"
+            >
+              <mat-option [value]="1">Simple</mat-option>
+              <mat-option [value]="2">Detailed</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Dimensions</mat-label>
+            <mat-select
+              [(ngModel)]="barcodeSettings.type"
+              [disabled]="isDimensionsDisabled"
+            >
+              <mat-option
+                *ngFor="let opt of barcodeDimensions"
+                [value]="opt.id"
+              >
+                {{ opt.option }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <button
+          mat-flat-button
+          (click)="submitBarcodeSettings()"
+          class="float-sm-right my-2 btn-purple text-white py-1 px-5"
+        >
+          Save Barcode Settings
+        </button>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel #order>
+        <mat-expansion-panel-header>
+          <mat-panel-title
+            class="nav-subheading"
+            [ngClass]="{ 'text-purple': order._expanded }"
+          >
+            <strong>Order Verification</strong>
+          </mat-panel-title>
+          <mat-icon *ngIf="!order._expanded">add</mat-icon>
+          <mat-icon *ngIf="order._expanded">remove</mat-icon>
+        </mat-expansion-panel-header>
+
+        <div>
+          <div class="d-flex mb-3 flex-wrap">
+            <div class="cod-toggle">
+              <label class="font-weight-bold d-flex" for="codToggleSwitch"
+                >Verify COD Orders
+                <div class="custom-control custom-switch ml-5">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="codToggleSwitch"
+                    [(ngModel)]="companySettings.allow_cod_verification"
+                  />
+                  <span class="custom-control-label"></span>
+                </div>
+              </label>
+            </div>
+
+            <div class="prepaid-toggle ml-md-5">
+              <label class="font-weight-bold d-flex" for="prepaidToggleSwitch"
+                >Verify Prepaid Orders
+                <div class="custom-control custom-switch ml-4">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="prepaidToggleSwitch"
+                    [(ngModel)]="companySettings.allow_prepaid_verification"
+                  />
+                  <span class="custom-control-label"></span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="clearfix">
+            <p class="mb-0 text-bold">How does it work?</p>
+            <p class="text-muted">
+              Once you enable the
+              <strong class="text-dark"> "Order Verification" </strong>&nbsp;,
+              you'll be able to:
+            </p>
+
+            <ol class="pl-xl text-muted">
+              <li>Segregate orders on the basis of COD or Prepaid.</li>
+              <li>Have better control over RTOs.</li>
+              <li>
+                Take decision on all your orders before moving them to SRF
+                warehouse.
+              </li>
+            </ol>
+          </div>
+        </div>
+        <hr />
+        <div class="text-center">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="sumitCompanySettings()"
+            class="float-sm-right my-2 btn-purple text-white py-1 px-5"
+          >
+            Save Order Verification
+          </button>
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel #region>
+        <mat-expansion-panel-header>
+          <mat-panel-title
+            class="nav-subheading"
+            [ngClass]="{ 'text-purple': region._expanded }"
+          >
+            <strong>Region Selector</strong>
+          </mat-panel-title>
+          <mat-panel-description>
+            Select region to activate shipment
+          </mat-panel-description>
+          <mat-icon *ngIf="!region._expanded">add</mat-icon>
+          <mat-icon *ngIf="region._expanded">remove</mat-icon>
+        </mat-expansion-panel-header>
+
+        <div class="container">
+          <div class="row my-3">
+            <div class="col-12 d-flex justify-content-center mb-3">
+              <label class="font-weight-bold pointer" for="panIndia">
+                Pan India
+              </label>
+              <div class="custom-control custom-switch ml-2">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="panIndia"
+                  (change)="changePanIndia($event)"
+                  [(ngModel)]="panIndiaCheck"
+                />
+                <label
+                  class="custom-control-label pointer"
+                  for="panIndia"
+                ></label>
+              </div>
+            </div>
+            <div class="col-md-4 px-0 d-flex mb-3" *ngFor="let zone of zones">
+              <label class="font-weight-bold pointer" for="{{ zone.name }}">
+                {{ zone.name }}
+              </label>
+              <div class="custom-control custom-switch ml-2">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="{{ zone.name }}"
+                  [(ngModel)]="zone.selected"
+                  [checked]="zone.selected"
+                  (change)="togglePanIndia()"
+                />
+                <label
+                  class="custom-control-label pointer"
+                  for="{{ zone.name }}"
+                ></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+        <div class="text-center">
+          <button
+            mat-flat-button
+            (click)="sumitCompanySettings()"
+            class="float-sm-right my-2 btn-purple text-white py-1 px-5"
+          >
+            Save Regions
+          </button>
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel *ngIf="fbsSettings?.is_blackbox" #smart>
+        <mat-expansion-panel-header>
+          <mat-panel-title
+            class="nav-subheading"
+            [ngClass]="{ 'text-purple': smart._expanded }"
+          >
+            <strong>Shipping Methods</strong>
+          </mat-panel-title>
+          <mat-icon *ngIf="!smart._expanded">add</mat-icon>
+          <mat-icon *ngIf="smart._expanded">remove</mat-icon>
+        </mat-expansion-panel-header>
+        <app-srf-smart
+          [fbsSettings]="fbsSettings"
+          [shippingMethod]="shippingMethod"
+          (submitted)="onSrfSmartSubmit($event)"
+        ></app-srf-smart>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

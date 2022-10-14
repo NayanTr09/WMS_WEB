@@ -1,0 +1,154 @@
+<form [formGroup]="selectProducts" (submit)="onClickSubmit($event)">
+  <div class="text-center mb-4">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-6">
+        <h2 class="font-weight-bold">Stock Transfer Details</h2>
+        <!-- <p class="text-muted">
+          These are the barcode formats that we have for your products. If you
+          would like us to print and paste these in the FC, select the
+          checkboxes at the bottom.
+        </p> -->
+      </div>
+    </div>
+    <br />
+
+    <div class="row justify-content-center">
+      <div
+        class="col-lg-10 bdr-g br-10 p-0 w-95 mx-3 mx-lg-auto table-responsive"
+      >
+        <table class="table table-sm text-left mb-0 rm-top-border">
+          <thead>
+            <tr>
+              <th scope="col" class="pl-md-4">Moving From</th>
+              <th scope="col" class="pl-md-4">Moving To</th>
+              <!-- <th scope="col">Units</th> -->
+              <!-- <th scope="col">Barcode Value</th> -->
+              <!-- <th scope="col"></th> -->
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- <ng-container
+              formArrayName="barcodes"
+              *ngFor="let detail of getBarcodes.controls; let i = index"
+            > -->
+            <tr>
+              <th scope="row" class="pl-md-4">
+                {{ stock_info?.from_warehouse }} <br />
+                <span class="badge badge-info">{{
+                  stock_info?.from_type
+                }}</span>
+              </th>
+              <th scope="row" class="pl-md-4">
+                {{ stock_info?.from_warehouse }} <br />
+                <span class="badge badge-info">{{ stock_info?.to_type }}</span>
+              </th>
+
+              <!-- <td>{{ detail.value.sr_pin }}</td> -->
+              <!-- <td>
+                  <button
+                    class="close float-none text-red"
+                    (click)="removeItem(i)"
+                  >
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </td> -->
+            </tr>
+            <!-- </ng-container> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <br />
+    <ng-container *ngIf="getProducts.length; else zeroProducts">
+      <div class="row justify-content-center">
+        <div
+          class="col-lg-10 bdr-g br-10 p-0 w-95 mx-3 mx-lg-auto table-responsive"
+        >
+          <table class="table table-sm text-left mb-0 rm-top-border">
+            <thead>
+              <tr>
+                <th scope="col" class="pl-md-4">SKU</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Units</th>
+                <!-- <th scope="col">Barcode Value</th> -->
+                <!-- <th scope="col"></th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container
+                formArrayName="products"
+                *ngFor="let detail of getProducts.controls; let i = index"
+              >
+                <tr>
+                  <th scope="row" class="pl-md-4">
+                    {{ detail.value.sku }}
+                  </th>
+                  <td>{{ detail.value.product_name }}</td>
+                  <td>{{ detail.value.quantity }}</td>
+                  <!-- <td>{{ detail.value.sr_pin }}</td> -->
+                  <!-- <td>
+                    <button
+                      class="close float-none text-red"
+                      (click)="removeItem(i)"
+                    >
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </td> -->
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+    <br />
+    <!-- <div class="row">
+      <div class="col">
+        <h3 class="font-weight-bold mb-1">Print and paste in FC</h3>
+        <mat-checkbox
+          formControlName="mrpCheck"
+          color="primary"
+          class="gray-checkbox"
+          >MRP Labels</mat-checkbox
+        >
+        <mat-checkbox
+          formControlName="barcodesCheck"
+          color="primary"
+          class="gray-checkbox ml-3"
+          >Barcodes</mat-checkbox
+        >
+      </div>
+    </div> -->
+  </div>
+  <hr />
+  <div class="d-flex justify-content-between align-items-center">
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="onClickPrev()"
+      *ngIf="stock_info.status == 0"
+    >
+      Previous
+    </button>
+    <div class="text-muted">{{ formStatus }}</div>
+    <button
+      mat-stroked-button
+      class="btn-purple text-light"
+      type="submit"
+      [hidden]="stData?.stock_transfer_id"
+    >
+      Save
+    </button>
+  </div>
+</form>
+
+<ng-template #zeroProducts>
+  <div
+    class="d-flex align-items-center justify-content-center"
+    style="height: 20vh"
+  >
+    <h2 class="text-muted font-weight-bold">No Products Found</h2>
+  </div>
+</ng-template>

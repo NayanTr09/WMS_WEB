@@ -1,0 +1,63 @@
+.table-wrap {
+  @extend .bdr-g, .br-10;
+
+  .table-container {
+    position: relative;
+    overflow: auto;
+  }
+
+  table {
+    width: 100%;
+    background-color: unset;
+  }
+
+  .mat-header-cell {
+    @extend .font-weight-bold, .text-grey, .font-sm, .p-md;
+  }
+
+  .mat-cell {
+    @extend .p-md;
+    color: var(--gray);
+  }
+
+  .mat-paginator-range-actions {
+    @extend .btn-group;
+    @extend .bdr-g, .br-6;
+    background-color: $light-grey-2;
+  }
+
+  .mat-paginator {
+    @extend .p-md;
+    background-color: unset;
+
+    .mat-icon-button {
+      &:first-of-type {
+        border-right: 1px solid $border-grey;
+      }
+      border-radius: unset;
+      line-height: unset;
+      min-width: unset;
+      height: 35px;
+    }
+  }
+
+  // .mat-form-field {
+  //     .mat-form-field-underline {
+  //         background-color: transparent;
+  //     }
+
+  //     .mat-form-field-infix{
+  //         @extend .br-6, .bdr-g, .font-weight-bold;
+  //         padding: 6px;
+  //         height: 35px;
+  //         line-height: 25px;
+  //         background-color: $light-grey-2;
+  //         color: var(--gray);
+
+  //     }
+  // }
+}
+
+.wide15 {
+  min-width: 15rem;
+}

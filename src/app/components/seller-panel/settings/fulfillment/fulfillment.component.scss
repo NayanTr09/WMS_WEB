@@ -1,0 +1,18 @@
+@import '../../../../../assets/scss/main.scss';
+
+.fulfillment-section {
+    border-radius: 10px !important;
+}
+
+.nav-heading {
+    font-size: 16px;
+}
+
+.nav-subheading {
+    font-size: $fontSize-sm;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+    border-color: $light-green;
+    background-color: $light-green;
+}

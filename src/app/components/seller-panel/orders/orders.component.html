@@ -1,0 +1,80 @@
+<div class="pl-sm pr-sm mb-3">
+  <h1 class="mb-2">Orders</h1>
+  <p class="text-muted">See full list of your orders of your account</p>
+</div>
+<div class="card border-0">
+  <nav mat-tab-nav-bar class="pl-sm pr-sm">
+    <!-- <a mat-tab-link  *ngFor="let link of tabLinks" [routerLink]="link.link" 
+		routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">{{link.label}}</a>            -->
+
+    <a
+      mat-tab-link
+      *ngFor="let link of tabLinks"
+      (click)="tabClick($event)"
+      [routerLink]="link.link"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="link.is_active"
+      >{{ link.label }}</a
+    >
+
+    <button
+      mat-icon-button
+      class="m-2 ml-auto download-btn"
+      matTooltip="Download"
+      (click)="downloadCsv()"
+    >
+      <mat-icon>get_app</mat-icon>
+    </button>
+    <a
+      href="#"
+      id="downloadLink"
+      hidden
+      onclick="return false"
+      appDownload
+      [reponseType]="'export'"
+      [requestData]="qs"
+      [download_url]="reportDownloadURL"
+      [method]="'post'"
+      [type_name]="reportTypeName"
+    ></a>
+  </nav>
+  <!-- <router-outlet>
+	</router-outlet> -->
+  <app-my-loader></app-my-loader>
+  <allorders
+    *ngIf="activeLink == '/orders/allorders'"
+    [populate_filter_data]="filtersData"
+    [query]="queryParams['allorders']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading</allorders
+  >
+  <activeorders
+    *ngIf="activeLink == '/orders/activeorders'"
+    [populate_filter_data]="filtersData"
+    [query]="queryParams['activeorders']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading</activeorders
+  >
+  <onholdorders
+    *ngIf="activeLink == '/orders/onholdorders'"
+    [populate_filter_data]="filtersData"
+    [query]="queryParams['onholdorders']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading</onholdorders
+  >
+  <backorders
+    *ngIf="activeLink == '/orders/backorders'"
+    [populate_filter_data]="filtersData"
+    [query]="queryParams['backorders']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading</backorders
+  >
+  <completedorders
+    *ngIf="activeLink == '/orders/completedorders'"
+    [populate_filter_data]="filtersData"
+    [query]="queryParams['completedorders']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading</completedorders
+  >
+</div>

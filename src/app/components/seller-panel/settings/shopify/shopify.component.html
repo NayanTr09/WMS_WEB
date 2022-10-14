@@ -1,0 +1,91 @@
+<app-my-loader></app-my-loader>
+
+<div class="main d-flex m-auto rounded">
+  <form #f="ngForm" (ngSubmit)="onSubmit()">
+    <div class="navbar d-flex justify-content-around">
+      <img src="../../../../../assets/images/img/logo/shopify1.jpg" id="logo" />
+      <h2 class="font-weight-bold">1. Install Shiprocket's Shopify App</h2>
+    </div>
+
+    <main>
+      <div class="left">
+        <div class="info">
+          <p>
+            Installing Shiprocket’s Shopify App will allow Shiprocket to turn on
+            or off shipping badges, depending on inventory levels.
+          </p>
+          <p>
+            <b>Note:</b> This badge depends on
+            <a href="#">Shopify Carrier Sevice</a> access to function.
+          </p>
+        </div>
+        <div>
+          <mat-form-field appearance="outline" required>
+            <mat-label>Store</mat-label>
+            <mat-select
+              [(ngModel)]="selectedStore"
+              (selectionChange)="onChange($event)"
+              required
+              name="shopifyName"
+              ngModel
+            >
+              <ng-container *ngFor="let store of storeUrls">
+                <mat-option value="{{ store.store_url }}" selected>{{
+                  store.store_url
+                }}</mat-option>
+                <!-- <mat-option value="shivirush.myshopify.com"
+              >shivirush.myshopify.com</mat-option> -->
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Shopify Name</mat-label>
+            <span class="text-muted user-select-none" matSuffix
+              >.myshopify.com</span
+            >
+            <input matInput required name="shopifyName" ngModel />
+            <mat-error>
+              <span>Shopify Name <strong>required</strong></span>
+            </mat-error>
+          </mat-form-field> -->
+        </div>
+      </div>
+      <div class="right shadow-sm">
+        <img
+          src="../../../../../assets/images/img/logo/right-panel.svg"
+          id="right-panel"
+        />
+      </div>
+    </main>
+    <hr />
+    <footer class="d-flex justify-content-between mx-5 my-4">
+      <button
+        mat-flat-button
+        type="button"
+        class="my-1 btn-white text-purple px-5"
+        (click)="onPrevious()"
+      >
+        Previous
+      </button>
+      <button
+        mat-flat-button
+        type="submit"
+        class="my-1 btn-purple text-white px-5"
+        [disabled]="!f.valid"
+        *ngIf="!isInstalled"
+      >
+        Install App
+      </button>
+      <button
+        mat-flat-button
+        type="button"
+        class="my-1 btn-purple text-white px-5"
+        *ngIf="isInstalled"
+        (click)="onNext()"
+      >
+        Next
+      </button>
+    </footer>
+  </form>
+</div>

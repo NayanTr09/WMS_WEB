@@ -1,0 +1,61 @@
+<form [formGroup]="shipping" (submit)="onClickSubmit($event)">
+  <div class="row flex-column">
+    <div class="col-md-6 mx-auto text-center">
+      <h2 class="font-weight-bold mb-2">
+        Where do you want to pick your products from ?
+      </h2>
+      <p class="text-muted mb-3">
+        Select the location from which you will be pickup your products.
+      </p>
+
+      <mat-form-field appearance="outline" class="w-75">
+        <mat-label>Select Fulfillment Location</mat-label>
+        <mat-select
+          formControlName="fromLocation"
+          (selectionChange)="fromLocationChanged($event)"
+        >
+          <mat-option
+            *ngFor="let warehouse of warehouses"
+            [value]="warehouse.code"
+          >
+            {{ warehouse.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="shipping.get(['fromLocation']).invalid"
+          >Please Select Fulfillment Center</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-6 mx-auto text-center">
+      <h2 class="font-weight-bold">
+        Where are do you want to place your products ?
+      </h2>
+      <mat-form-field appearance="outline" class="w-75">
+        <mat-label>Select Fulfillment Center</mat-label>
+        <mat-select formControlName="toLocation" disabled="true">
+          <mat-option
+            *ngFor="let warehouse of warehouses"
+            [value]="warehouse.to_warehouse_code"
+          >
+            {{ warehouse.to_warehouse_type }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="shipping.get(['toLocation']).invalid"
+          >Please Select Fulfillment Center
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <hr />
+  <div class="d-flex align-items-center">
+    <div class="flex-grow-1 text-muted text-center">{{ formStatus }}</div>
+    <button
+      type="submit"
+      mat-stroked-button
+      class="ml-auto btn-purple text-light"
+    >
+      Next
+    </button>
+  </div>
+</form>

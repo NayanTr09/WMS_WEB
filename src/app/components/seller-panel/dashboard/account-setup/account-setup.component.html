@@ -1,0 +1,1195 @@
+<div [hidden]="accountSetupDone">
+  <app-my-loader></app-my-loader>
+  <div class="pl-sm pr-sm mb-3">
+    <h1 class="mb-2 text-purple">
+      <strong>Welcome to Shiprocket Fulfillment!</strong>
+    </h1>
+    <h1 class="mb-2">Account Setup</h1>
+  </div>
+
+  <div class="card border rounded-lg mb-4">
+    <div class="row mx-0 flex-column-reverse flex-md-row">
+      <div class="col-md-8 p-3">
+        <form [formGroup]="sellerAccountSetupForm" style="min-height: 24rem">
+          <mat-horizontal-stepper [linear]="true" #stepper>
+            <!-- ============= Step 1 ============= -->
+            <mat-step
+              [stepControl]="sellerAccountSetupForm.controls.company_details"
+            >
+              <!-- ============= Account Detail Form ============= -->
+              <div formGroupName="company_details" class="container">
+                <h3 class="mb-0 text-bold">About your company</h3>
+                <p>Details about your company's name and address</p>
+                <div class="row">
+                  <div
+                    class="col-6"
+                    [ngClass]="{
+                      'form-error':
+                        sellerAccountSetupForm.get(['company_details', 'name'])
+                          .errors &&
+                        (sellerAccountSetupForm.get(['company_details', 'name'])
+                          .touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'name'
+                          ]).dirty)
+                    }"
+                  >
+                    <label class="mb-xs block">Company Name</label>
+                    <input
+                      class="form-control fluid br-6 w-100 block"
+                      formControlName="name"
+                    />
+                    <mat-error
+                      *ngIf="
+                        sellerAccountSetupForm.get(['company_details', 'name'])
+                          .errors &&
+                        (sellerAccountSetupForm.get(['company_details', 'name'])
+                          .touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'name'
+                          ]).dirty)
+                      "
+                      >Company name should be 2 characters long</mat-error
+                    >
+                  </div>
+                  <div
+                    class="col-6"
+                    [ngClass]="{
+                      'form-error':
+                        sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .errors &&
+                        (sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'gstn'
+                          ]).dirty)
+                    }"
+                  >
+                    <mat-label class="mb-xs block">GSTIN</mat-label>
+                    <input
+                      class="form-control fluid br-6 w-100 block"
+                      formControlName="gstn"
+                      required
+                      maxlength="15"
+                    />
+
+                    <mat-error
+                      *ngIf="
+                        sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .errors &&
+                        (sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'gstn'
+                          ]).dirty) &&
+                        (sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .errors.required ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'gstn'
+                          ]).errors.maxlength ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'gstn'
+                          ]).errors.minlength)
+                      "
+                    >
+                      Please provide a valid 15 digit GSTIN
+                    </mat-error>
+
+                    <mat-error
+                      *ngIf="
+                        sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .errors &&
+                        (sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'gstn'
+                          ]).dirty) &&
+                        !sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .errors.required &&
+                        sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .errors.pattern.requiredPattern &&
+                        !sellerAccountSetupForm.get(['company_details', 'gstn'])
+                          .errors.minlength
+                      "
+                    >
+                      Invalid GSTIN
+                    </mat-error>
+                  </div>
+                </div>
+                <div class="row">
+                  <div
+                    class="col-6"
+                    [ngClass]="{
+                      'form-error':
+                        sellerAccountSetupForm.get([
+                          'company_details',
+                          'address1'
+                        ]).errors &&
+                        (sellerAccountSetupForm.get([
+                          'company_details',
+                          'address1'
+                        ]).touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'address1'
+                          ]).dirty)
+                    }"
+                  >
+                    <mat-label class="mb-xs block">Address Line 1</mat-label>
+                    <input
+                      class="form-control fluid br-6 w-100 block"
+                      formControlName="address1"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        sellerAccountSetupForm.get([
+                          'company_details',
+                          'address1'
+                        ]).errors &&
+                        (sellerAccountSetupForm.get([
+                          'company_details',
+                          'address1'
+                        ]).touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'address1'
+                          ]).dirty)
+                      "
+                      >Company address Line 1 is required</mat-error
+                    >
+                  </div>
+                  <div class="col-6">
+                    <mat-label class="mb-xs block">Address Line 2</mat-label>
+                    <input
+                      class="form-control fluid br-6 w-100 block"
+                      formControlName="address2"
+                    />
+                  </div>
+                </div>
+                <div class="row">
+                  <div
+                    class="col-6"
+                    [ngClass]="{
+                      'form-error':
+                        sellerAccountSetupForm.get([
+                          'company_details',
+                          'pincode'
+                        ]).errors &&
+                        (sellerAccountSetupForm.get([
+                          'company_details',
+                          'pincode'
+                        ]).touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'pincode'
+                          ]).dirty)
+                    }"
+                  >
+                    <mat-label class="mb-xs block">Pincode</mat-label>
+                    <input
+                      class="form-control fluid br-6 w-100 block"
+                      formControlName="pincode"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        sellerAccountSetupForm.get([
+                          'company_details',
+                          'pincode'
+                        ]).errors &&
+                        (sellerAccountSetupForm.get([
+                          'company_details',
+                          'pincode'
+                        ]).touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'pincode'
+                          ]).dirty)
+                      "
+                      >Please provide a valid 6 digit pincode</mat-error
+                    >
+                  </div>
+                  <div
+                    class="col-6"
+                    [ngClass]="{
+                      'form-error':
+                        sellerAccountSetupForm.get(['company_details', 'state'])
+                          .errors &&
+                        (sellerAccountSetupForm.get([
+                          'company_details',
+                          'state'
+                        ]).touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'state'
+                          ]).dirty)
+                    }"
+                  >
+                    <mat-label class="mb-xs block">State</mat-label>
+
+                    <select
+                      class="form-control fluid br-6 w-100 block bg-none"
+                      formControlName="state"
+                    >
+                      <option value="">Select State</option>
+                      <option
+                        *ngFor="let state of stateList"
+                        [value]="state.name"
+                      >
+                        {{ state.name }}
+                      </option>
+                    </select>
+
+                    <mat-error
+                      *ngIf="
+                        sellerAccountSetupForm.get(['company_details', 'state'])
+                          .errors &&
+                        (sellerAccountSetupForm.get([
+                          'company_details',
+                          'state'
+                        ]).touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'state'
+                          ]).dirty)
+                      "
+                      >State is required</mat-error
+                    >
+                  </div>
+                </div>
+                <div class="row">
+                  <div
+                    class="col-6"
+                    [ngClass]="{
+                      'form-error':
+                        sellerAccountSetupForm.get(['company_details', 'logo'])
+                          .errors &&
+                        (sellerAccountSetupForm.get(['company_details', 'logo'])
+                          .touched ||
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'logo'
+                          ]).dirty)
+                    }"
+                  >
+                    <mat-label class="mb-xs block">Logo </mat-label>
+                    <app-file-upload
+                      formControlName="logo"
+                      accept=".jpeg,.png,.jpg"
+                      (change)="uploadLogo($event)"
+                      class="file-control fluid br-6 w-100 block text-center"
+                      [label]="
+                        sellerAccountSetupForm.get([
+                          'company_details',
+                          'logo_url'
+                        ]).value
+                          ? 'Update Logo'
+                          : 'Upload Logo'
+                      "
+                    ></app-file-upload>
+                    <small class="text-muted"
+                      >The logo must be a file of type:<i
+                        >jpeg, png, jpg</i
+                      ></small
+                    >
+
+                    <div
+                      class="font-xs position-relative company-logo mt-2"
+                      *ngIf="
+                        sellerAccountSetupForm.get([
+                          'company_details',
+                          'logo_url'
+                        ]).value
+                      "
+                    >
+                      <img
+                        [src]="
+                          sellerAccountSetupForm.get([
+                            'company_details',
+                            'logo_url'
+                          ]).value
+                        "
+                        alt="company logo"
+                        width="100"
+                      />
+                      <button
+                        type="button"
+                        class="close position-absolute"
+                        title="remove"
+                        (click)="removeLogo()"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <!-- <mat-error
+                    *ngIf="
+                      sellerAccountSetupForm.get(['company_details', 'logo'])
+                        .errors &&
+                      (sellerAccountSetupForm.get(['company_details', 'logo'])
+                        .touched ||
+                        sellerAccountSetupForm.get(['company_details', 'logo'])
+                          .dirty)
+                    "
+                    >Please provide valid logo</mat-error
+                  > -->
+                  </div>
+                  <div class="col-6"></div>
+                </div>
+              </div>
+            </mat-step>
+
+            <!-- ============= Step 3 ============= -->
+            <!-- ============= Warehouse Selection Form ============= -->
+            <mat-step
+              [stepControl]="sellerAccountSetupForm.controls.dynamicWarehouses"
+            >
+              <div class="container">
+                <h3 class="mb-0 text-bold">Choose the Fulfillment Center</h3>
+                <p>Select the fulfillment center you want to opt for</p>
+                <div class="row">
+                  <div class="col-6">
+                    <span>Upload Documents for selected warehouse</span>
+                  </div>
+                  <div class="col-6 text-right">
+                    <button
+                      mat-button
+                      class="btn-purple text-white"
+                      (click)="selectFulfillmentDialog()"
+                    >
+                      <span class="icon-plus"></span> Add Fulfillment Center
+                    </button>
+                    <br />
+                    <small
+                      *ngIf="
+                        !sellerAccountSetupForm.controls.dynamicWarehouses.value
+                          .warehouseArray.length
+                      "
+                      class="text-danger"
+                      >Need atleast one fulfillment center</small
+                    >
+                  </div>
+                </div>
+                <div
+                  formGroupName="dynamicWarehouses"
+                  *ngIf="selectedWarehouseList.length"
+                >
+                  <div formArrayName="warehouseArray">
+                    <div
+                      class="uploaded-warehouse br-10 bdr-g mt-sm mb-sm"
+                      *ngFor="
+                        let warhouseItem of selectedWarehouseList;
+                        let i = index
+                      "
+                    >
+                      <div>
+                        <span
+                          class="icon-checked text-green text-middle font-sm"
+                        ></span>
+                        <span class="icon-warehouse text-middle"></span>
+
+                        <span class="text-middle">{{
+                          warhouseItem ? warhouseItem.name : null
+                        }}</span>
+
+                        <mat-icon
+                          *ngIf="toggleWarehouses[i]"
+                          class="pointer text-middle font-sm float-right"
+                          (click)="toggleWaerhouse(i)"
+                          title="expand"
+                          >add</mat-icon
+                        >
+                        <mat-icon
+                          *ngIf="!toggleWarehouses[i]"
+                          class="pointer text-middle font-sm float-right"
+                          (click)="toggleWaerhouse(i)"
+                          title="collapse"
+                          >remove</mat-icon
+                        >
+                        <span
+                          (click)="removeWarehouse(i)"
+                          title="remove"
+                          style="margin-left: auto"
+                          class="icon-trash pointer text-middle font-sm pull-right mr-sm"
+                        ></span>
+                      </div>
+                      <div
+                        [formGroupName]="i"
+                        class="mt-sm"
+                        [ngClass]="{
+                          hide:
+                            toggleWarehouses[i] &&
+                            !sellerAccountSetupForm.controls.dynamicWarehouses[
+                              'controls'
+                            ]['warehouseArray']['controls'][i].invalid
+                        }"
+                      >
+                        <div class="row">
+                          <input type="hidden" formControlName="id" />
+                          <div
+                            class="col-6"
+                            [ngClass]="{
+                              'form-error':
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).errors &&
+                                (sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).touched ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'company_gst'
+                                  ]).dirty)
+                            }"
+                          >
+                            <mat-label class="mb-xs block"
+                              >Company GST</mat-label
+                            >
+                            <input
+                              formControlName="company_gst"
+                              class="form-control fluid br-6 w-100 block disabled"
+                              required
+                              maxlength="15"
+                            />
+                            <mat-error
+                              *ngIf="
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).errors &&
+                                (sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).touched ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'company_gst'
+                                  ]).dirty) &&
+                                (sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).errors.required ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'company_gst'
+                                  ]).errors.maxlength ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'company_gst'
+                                  ]).errors.minlength)
+                              "
+                              >Please provide a valid 15 digit GSTIN
+                            </mat-error>
+
+                            <mat-error
+                              *ngIf="
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).errors &&
+                                (sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).touched ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'company_gst'
+                                  ]).dirty) &&
+                                !sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).errors.required &&
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).errors.pattern.requiredPattern &&
+                                !sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).errors.minlength
+                              "
+                            >
+                              Invalid GSTIN
+                            </mat-error>
+                          </div>
+
+                          <div
+                            class="col-6"
+                            [ngClass]="{
+                              'form-error':
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).errors &&
+                                (sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).touched ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'state_gst'
+                                  ]).dirty)
+                            }"
+                          >
+                            <mat-label class="mb-xs block">State GST</mat-label>
+                            <input
+                              formControlName="state_gst"
+                              class="form-control fluid br-6 w-100 block"
+                              maxlength="15"
+                              required
+                            />
+                            <!-- <mat-error
+                            *ngIf="
+                              sellerAccountSetupForm.get([
+                                'dynamicWarehouses',
+                                'warehouseArray',
+                                i,
+                                'state_gst'
+                              ]).errors &&
+                              (sellerAccountSetupForm.get([
+                                'dynamicWarehouses',
+                                'warehouseArray',
+                                i,
+                                'state_gst'
+                              ]).touched ||
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).dirty)
+                            "
+                            >State GST is required</mat-error
+                          > -->
+                            <mat-error
+                              *ngIf="
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).errors &&
+                                (sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).touched ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'state_gst'
+                                  ]).dirty) &&
+                                (sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).errors.required ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'state_gst'
+                                  ]).errors.maxlength ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'state_gst'
+                                  ]).errors.minlength)
+                              "
+                              >Please provide a valid 15 digit GSTIN
+                            </mat-error>
+
+                            <mat-error
+                              *ngIf="
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).errors &&
+                                (sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).touched ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'state_gst'
+                                  ]).dirty) &&
+                                !sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).errors.required &&
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).errors.pattern.requiredPattern &&
+                                !sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'state_gst'
+                                ]).errors.minlength
+                              "
+                            >
+                              Invalid GSTIN
+                            </mat-error>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-6">
+                            <mat-label class="mb-xs block"
+                              >Additional Place Of Business</mat-label
+                            >
+                            <app-file-upload
+                              (change)="uploadBusinessPlace(i)"
+                              formControlName="place_of_business"
+                              class="file-control fluid br-6 w-100 block text-center"
+                              [label]="'Upload PDF'"
+                              [defaultFilename]="
+                                warehouseArray.controls[i].value?.filename
+                              "
+                              accept=".pdf"
+                            ></app-file-upload>
+                            <span
+                              class="text-green font-xs"
+                              *ngIf="
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'pb_url'
+                                ]).value
+                              "
+                            >
+                              <a
+                                [href]="
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'pb_url'
+                                  ]).value
+                                "
+                                target="_blank"
+                                >View PDF</a
+                              >
+                            </span>
+                            <mat-error
+                              *ngIf="
+                                (sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'company_gst'
+                                ]).touched ||
+                                  sellerAccountSetupForm.get([
+                                    'dynamicWarehouses',
+                                    'warehouseArray',
+                                    i,
+                                    'company_gst'
+                                  ]).dirty) &&
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'place_of_business'
+                                ]).errors?.required
+                              "
+                            >
+                              Please upload file
+                            </mat-error>
+                            <mat-error
+                              *ngIf="
+                                sellerAccountSetupForm.get([
+                                  'dynamicWarehouses',
+                                  'warehouseArray',
+                                  i,
+                                  'place_of_business'
+                                ]).errors?.requiredFileType
+                              "
+                            >
+                              Please upload valid pdf file
+                            </mat-error>
+                          </div>
+                          <div class="col-6"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-step>
+
+            <!-- ============= Step 4 ============= -->
+
+            <!-- <mat-step
+              [stepControl]="sellerAccountSetupForm.controls.masterCatalog"
+              (selectionChange)="stepper.selectedIndex = 1; next()"
+            > -->
+            <!-- ============= Upload Products ============= -->
+            <!-- <div class="container">
+                <strong>Add products to your master catalog</strong> (You have
+                {{ this.productsDataCount }}
+                products added to your catalog) <br />
+                <br />
+
+                <strong>Steps : </strong>
+
+                <ol>
+                  <li>1. Download sample excel sheet</li>
+                  <li>2. Fill your product details in the sheet</li>
+                  <li>3. Save and upload the sheet below</li>
+                </ol>
+
+                <div formGroupName="masterCatalog" class="mt-sm">
+                  <div class="row">
+                    <div
+                      class="col-6"
+                      [ngClass]="{
+                        'form-error':
+                          sellerAccountSetupForm.get([
+                            'masterCatalog',
+                            'upload_product'
+                          ]).errors &&
+                          (sellerAccountSetupForm.get([
+                            'masterCatalog',
+                            'upload_product'
+                          ]).touched ||
+                            sellerAccountSetupForm.get([
+                              'masterCatalog',
+                              'upload_product'
+                            ]).dirty)
+                      }"
+                    >
+                      <app-file-upload
+                        (change)="uploadProducts($event)"
+                        formControlName="upload_product"
+                        [label]="'Upload Products'"
+                        class="file-control mb-4 fluid br-6 w-100 block text-center"
+                      >
+                      </app-file-upload>
+                      <mat-error
+                        *ngIf="
+                          sellerAccountSetupForm.get([
+                            'masterCatalog',
+                            'upload_product'
+                          ]).errors &&
+                          (sellerAccountSetupForm.get([
+                            'masterCatalog',
+                            'upload_product'
+                          ]).touched ||
+                            sellerAccountSetupForm.get([
+                              'masterCatalog',
+                              'upload_product'
+                            ]).dirty)
+                        "
+                        >Upload sheet is required.</mat-error
+                      >
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-6">
+                      <a
+                        mat-stroked-button
+                        (click)="
+                          downloadSample('products/sample', 'downloadCSV.csv')
+                        "
+                        class="w-100 text-decoration-none"
+                      >
+                        <span class="text-blue">
+                          <span class="icon-download text-middle"></span>
+                          Download Sample Sheet
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-step> -->
+          </mat-horizontal-stepper>
+        </form>
+        <div
+          class="d-flex mt-md"
+          [ngClass]="
+            stepper.selectedIndex == 0
+              ? 'justify-content-end'
+              : 'justify-content-between'
+          "
+        >
+          <button
+            mat-button
+            class="btn-stepper mr-md btn-purple"
+            *ngIf="stepper.selectedIndex != 0"
+            color="white"
+            (click)="previous()"
+          >
+            <span class="icon-left-arrow"></span> Previous
+          </button>
+          <button
+            mat-button
+            class="btn-stepper btn-purple"
+            color="white"
+            (click)="next()"
+          >
+            {{ stepper.selectedIndex == 1 ? 'Finish' : 'Next' }}
+            <span
+              *ngIf="stepper.selectedIndex != 1"
+              class="icon-right-arrow"
+            ></span>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4 border-left acnt-steps-wrap">
+        <div>
+          <h2>
+            {{
+              stepper.selectedIndex
+                ? !accountSetupDone
+                  ? (stepper.selectedIndex + 1) * 32
+                  : 100
+                : 10
+            }}%
+          </h2>
+          <mat-progress-bar
+            mode="determinate"
+            value="{{
+              stepper.selectedIndex
+                ? !accountSetupDone
+                  ? (stepper.selectedIndex + 1) * 32
+                  : 100
+                : 10
+            }}"
+          ></mat-progress-bar>
+        </div>
+
+        <ul class="acnt-steps mt-md">
+          <li class="text-green">
+            <div class="bullet mr-2 mb-2 mb-sm-auto bullet-done">1</div>
+            <span>Account Creation</span>
+          </li>
+          <li
+            [ngClass]="{
+              'text-green': stepper.selectedIndex > 0,
+              'text-blue': stepper.selectedIndex == 0
+            }"
+          >
+            <div
+              class="bullet mr-2 mb-2 mb-sm-auto"
+              [ngClass]="{
+                'bullet-done': stepper.selectedIndex > 0,
+                'bullet-next': stepper.selectedIndex == 0
+              }"
+            >
+              2
+            </div>
+            <!-- <span class="icon-checked text-text-bottom"></span> -->
+            Company Details
+          </li>
+
+          <li
+            [ngClass]="{
+              'text-green': stepper.selectedIndex > 1,
+              'text-blue': stepper.selectedIndex == 1
+            }"
+          >
+            <div
+              class="bullet mr-2 mb-2 mb-sm-auto"
+              [ngClass]="{
+                'bullet-done': stepper.selectedIndex > 1,
+                'bullet-next': stepper.selectedIndex == 1
+              }"
+            >
+              3
+            </div>
+            <!-- <span class="icon-checked text-text-bottom"></span> -->
+            Document Upload
+          </li>
+          <li
+            [ngClass]="{
+              'text-green': accountSetupDone,
+              'text-blue': !accountSetupDone && stepper.selectedIndex == 2
+            }"
+          >
+            <div
+              class="bullet mr-2 mb-2 mb-sm-auto"
+              [ngClass]="{
+                'bullet-done': accountSetupDone,
+                'bullet-next': !accountSetupDone && stepper.selectedIndex == 2
+              }"
+            >
+              4
+            </div>
+            <span>Adding Products</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #dialogRef let-data>
+  <div mat-dialog-content>
+    <h2 mat-dialog-title>Select Fulfillment Center</h2>
+    <select
+      [(ngModel)]="modelWarehouse"
+      name=""
+      required
+      class="form-control fluid br-6 w-100 block bg-none"
+    >
+      <option [value]="{}">Select your fulfillment center</option>
+      <option [ngValue]="warehouse" *ngFor="let warehouse of data">
+        {{ warehouse.name }}
+      </option>
+    </select>
+  </div>
+  <mat-dialog-actions align="end" class="pb-3">
+    <button mat-stroked-button mat-dialog-close>Cancel</button>
+    <button
+      mat-button
+      class="btn-purple text-white"
+      [disabled]="!modelWarehouse.id"
+      (click)="selectWarehouse(modelWarehouse)"
+    >
+      Add
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #uploadProductDialog let-data>
+  <app-my-loader></app-my-loader>
+  <h2 mat-dialog-title>
+    Upload Report
+    <button class="close" title="close" [mat-dialog-close]="true">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </h2>
+  <div mat-dialog-content>
+    <div class="container">
+      <div class="row">
+        <ul class="list-group list-group-horizontal">
+          <li class="list-group-item">
+            <strong>Updated: </strong>
+            {{ data.updated }}
+          </li>
+          <li class="list-group-item">
+            <strong>Added: </strong> {{ data.added }}
+          </li>
+          <li class="list-group-item text-danger">
+            <strong>Errors:</strong> {{ data.errors }}
+          </li>
+        </ul>
+        <a
+          href="#"
+          id="downloadErrorLink"
+          hidden
+          onclick="return false"
+          appDownload
+          [name]="'errorfile.csv'"
+          [download_url]="data.error_url"
+        ></a>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions class="justify-content-end mb-1">
+    <button
+      *ngIf="data.errors"
+      mat-flat-button
+      cdkFocusInitial
+      class="btn btn-danger"
+      title="Download Report"
+      (click)="downloadReport()"
+    >
+      Download error report
+    </button>
+    <button
+      *ngIf="!data.errors"
+      class="btn btn-success"
+      mat-flat-button
+      cdkFocusInitial
+      [mat-dialog-close]="true"
+    >
+      Submit
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #dialogSession let-data>
+  <h2 mat-dialog-title>Session Expired</h2>
+  <p class="text-grey">
+    Your session has expired you will be redirected to login page.
+  </p>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="auth.logout()" [mat-dialog-close]="true">
+      OK
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #setupDone>
+  <div mat-dialog-content class="text-center p-3">
+    <h1>YAY!</h1>
+    <h2>Account Setup Complete</h2>
+    <div class="d-flex justify-content-center">
+      <div class="setupSuccess">100%</div>
+    </div>
+  </div>
+  <div mat-dialog-actions class="justify-content-center">
+    <button
+      class="btn-purple text-white"
+      mat-button
+      [mat-dialog-close]="true"
+      routerLink="/orders/allorders"
+    >
+      Return To Orders
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #dialogChannel let-data>
+  <div class="relative">
+    <span class="icon-close pointer text-middle" mat-dialog-close></span>
+    <h2 mat-dialog-title>Connect New Channel</h2>
+    <img
+      src="assets/images/channels-logo/{{ data.channelLogo[data.channel] }}"
+      style="width: 100px"
+      alt=""
+    />
+    <div class="channel-form">
+      <div *ngIf="[1].indexOf(data.channel) == -1">
+        <label class="mb-xs block">Sore URL</label>
+        <input
+          class="form-control fluid br-6 w-100 block"
+          placeholder="Enter store url"
+          [(ngModel)]="modelChannel.storeUrl"
+        />
+      </div>
+      <div *ngIf="[1].indexOf(data.channel) != -1">
+        <label class="mb-xs block">Merchant Id</label>
+        <input
+          class="form-control fluid br-6 w-100 block"
+          placeholder="Enter merchant id"
+          [(ngModel)]="modelChannel.merchantId"
+        />
+      </div>
+      <div *ngIf="[1].indexOf(data.channel) != -1">
+        <label class="mb-xs block">MWS Auth Token</label>
+        <input
+          class="form-control fluid br-6 w-100 block"
+          placeholder="Enter store url"
+          [(ngModel)]="modelChannel.authToken"
+        />
+      </div>
+      <div *ngIf="[1].indexOf(data.channel) != -1">
+        <label class="mb-xs block">Marketplace Id</label>
+        <input
+          class="form-control fluid br-6 w-100 block"
+          placeholder="Enter store url"
+          [(ngModel)]="modelChannel.marketPlaceId"
+        />
+      </div>
+      <div *ngIf="[5].indexOf(data.channel) != -1">
+        <label class="mb-xs block">API Key</label>
+        <input
+          class="form-control fluid br-6 w-100 block"
+          placeholder="Enter API key"
+          [(ngModel)]="modelChannel.apiKey"
+        />
+      </div>
+      <div *ngIf="[5, 6].indexOf(data.channel) != -1">
+        <label>API Password</label>
+        <input
+          class="form-control fluid br-6 w-100 block"
+          placeholder="Enter API password"
+          [(ngModel)]="modelChannel.apiPassword"
+        />
+      </div>
+      <div *ngIf="[6].indexOf(data.channel) != -1">
+        <label>API Username</label>
+        <input
+          class="form-control fluid br-6 w-100 block"
+          placeholder="Enter API Username"
+          [(ngModel)]="modelChannel.apiUsername"
+        />
+      </div>
+      <div *ngIf="[5].indexOf(data.channel) != -1">
+        <label>Shared Secret</label>
+        <input
+          class="form-control fluid br-6 w-100 block"
+          placeholder="Enter shared secret"
+          [(ngModel)]="modelChannel.sharedSecret"
+        />
+      </div>
+    </div>
+    <mat-dialog-actions align="end" style="width: 100%; float: left">
+      <button
+        mat-button
+        (click)="integrateChannel(data.channel, data.channelData)"
+      >
+        Submit
+      </button>
+    </mat-dialog-actions>
+  </div>
+</ng-template>
+
+<!-- <div class="loader" *ngIf="showLoader">
+  <img src="assets/images/loader.svg" alt="" /> Please wait
+</div> -->

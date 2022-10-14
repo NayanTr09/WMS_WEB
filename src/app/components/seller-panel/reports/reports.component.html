@@ -1,0 +1,93 @@
+<app-my-loader></app-my-loader>
+
+<div class="card border-0 rounded-lg">
+  <div class="m-md mt-0">
+    <h1 class="mb-10">Reports</h1>
+    <hr />
+    <!-- <p class="text-muted">Lorem ipsum dolor sit amet.</p> -->
+    <app-filters
+      [filter_information]="filters_info"
+      (filtersEvent)="updateFilters($event)"
+    ></app-filters>
+  </div>
+
+  <div class="br-6 bg-white m-md">
+    <app-no-data-found
+      *ngIf="!tableSource.data.length && !firstTimeLoad"
+    ></app-no-data-found>
+    <div class="table-wrap" *ngIf="tableSource.data.length">
+      <div class="table-container">
+        <table mat-table [dataSource]="tableSource" class="list-table">
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Generated On</th>
+            <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef>Title</th>
+            <td mat-cell *matCellDef="let element">
+              {{
+                element.type?.toLowerCase()?.includes('asn')
+                  ? 'All ASN'
+                  : (element.type | titlecase)
+              }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let element">
+              {{
+                element.type?.toLowerCase()?.includes('asn')
+                  ? 'ASN'
+                  : (element.type | titlecase)
+              }}
+            </td>
+          </ng-container>
+
+          <!-- Created_at Column -->
+          <ng-container matColumnDef="from_to">
+            <th mat-header-cell *matHeaderCellDef>Date Range</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.from }} - {{ element.to }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="url">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                *ngIf="!is_admin || element.type != 'orders'"
+                mat-stroked-button
+                [disabled]="element.url == '' || element.url == null"
+                (click)="
+                  openDownloadUrl(element.url, element.is_report_downloadable)
+                "
+              >
+                <mat-icon>download</mat-icon>
+                Download
+              </button>
+              <p *ngIf="is_admin && element.type == 'orders'">No Access</p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="size">
+            <th mat-header-cell *matHeaderCellDef>Size</th>
+            <td mat-cell *matCellDef="let element">{{ element.size }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+      <mat-paginator
+        #paginator
+        [pageSizeOptions]="pageSizeOptions"
+        [length]="resultsLength"
+        [pageIndex]="currentPage"
+        [pageSize]="queryparams.per_page"
+        (page)="handlePage($event)"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+</div>

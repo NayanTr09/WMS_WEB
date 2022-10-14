@@ -1,0 +1,47 @@
+.file-upload {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+}
+
+.form-group label {
+  cursor: pointer;
+}
+
+.text-black {
+  color: #000;
+}
+label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+.btn-blue {
+  background: #285fdb;
+  color: #fff;
+}
+
+.b0 {
+  border-width: 0 !important;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 350px;
+}
+.color-red {
+  color: red;
+}
+
+.p-4 {
+  padding: 0.5rem !important;
+}
+
+::ng-deep .welcome-modal {
+  width: 80%;
+  height: auto;
+  min-width: 500px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  border-radius: 16px !important;
+}

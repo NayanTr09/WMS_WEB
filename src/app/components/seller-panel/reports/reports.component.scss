@@ -1,0 +1,17 @@
+table {
+  width: 100%;
+}
+
+.list-table {
+  text-align: center;
+
+  & th {
+    text-align: center;
+  }
+
+  & th:nth-child(-n + 2),
+  td:nth-child(-n + 2) {
+    // select first 2, ignore others
+    text-align: left;
+  }
+}

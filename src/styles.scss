@@ -1,0 +1,104 @@
+@import 'assets/scss/main.scss';
+
+// Theming Bootstrap
+$primary: $voilet;
+$danger: $red1;
+$success: $light-green;
+$breadcrumb-divider: quote('>');
+
+/* You can add global styles to this file, and also import other style files */
+// @import 'assets/scss/partials/icons.scss';
+@import 'assets/scss/partials/filter.scss';
+@import 'assets/scss/partials/tabs.scss';
+@import 'assets/scss/partials/paginator.scss';
+@import 'assets/scss/partials/table.scss';
+@import '~ngx-toastr/toastr';
+// @import "~bootstrap/dist/css/bootstrap";
+@import '~font-awesome/css/font-awesome.css';
+@import '~bootstrap/scss/bootstrap';
+//@import '~bootstrap/scss/functions';
+//@import '~bootstrap/scss/variables';
+//@import '~bootstrap/scss/mixins';
+//@import '~ngx-toastr/toastr-bs4-alert';
+// @import '../node_modules/ngx-toastr/toastr.css';
+@import '~@angular/material/theming';
+
+@font-face {
+  font-family: 'SF Pro';
+  src: url('assets/fonts/SF_pro_font/SF-Pro-Display-Black.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-BlackItalic.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-Bold.otf') format('otf')
+      url('assets/fonts/SF_pro_font/SF-Pro-Display-BoldItalic.otf')
+      format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-Heavy.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-HeavyItalic.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-Light.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-LightItalic.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-Medium.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-MediumItalic.otf')
+      format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-Regular.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-RegularItalic.otf')
+      format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-Semibold.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-SemiboldItalic.otf')
+      format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-Thin.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-ThinItalic.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-Ultralight.otf') format('otf'),
+    url('assets/fonts/SF_pro_font/SF-Pro-Display-UltralightItalic.otf')
+      format('otf');
+}
+
+$custom-typography: mat-typography-config(
+  $font-family: '"SF Pro", sans-serif; ',
+);
+
+@include mat-core($custom-typography);
+#toast-container > div {
+  opacity: 1;
+}
+
+/*Normalization*/
+* {
+  box-sizing: border-box;
+  outline: none;
+}
+a,
+a:visited {
+  text-decoration: none;
+  color: #2870f6;
+}
+button {
+  cursor: pointer;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: 'SF Pro', sans-serif;
+}
+.mat-card {
+  color: #495057 !important;
+}
+ul,
+ol,
+li {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+:root {
+  --bg-hover-red: #f5c6cb;
+  --bg-hover-blue: #b8daff;
+  // --bg-hover-green: #c3e6cb;
+  --bg-hover-green: #3fe05e;
+}
+
+.tooltip-list {
+  white-space: pre;
+  font-size: small;
+}

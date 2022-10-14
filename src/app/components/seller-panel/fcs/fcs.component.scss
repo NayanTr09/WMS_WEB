@@ -1,0 +1,35 @@
+@import "../../../../assets/scss/main.scss";
+
+table {
+    width: 100%;
+}
+
+.inventory-table {
+    height: 400px;
+    overflow: auto;
+}
+
+.download-btn {
+    color: $voilet;
+}
+
+.asn-btn{
+    background-color: $voilet;
+    color: white;
+}
+
+.nav-bar {
+    & a{
+        color: black !important;
+        font-weight: bolder;
+    }
+
+    & .mat-tab-label-active{
+        color: $voilet !important;
+    }
+
+    .mat-ink-bar::after {
+        background-color: $voilet;
+        background: $voilet !important;
+    }
+}

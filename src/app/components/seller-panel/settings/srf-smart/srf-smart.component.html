@@ -1,0 +1,130 @@
+<form [formGroup]="srfSmartForm" (submit)="onClickSubmit($event)">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="row mb-3">
+          <div class="col-12 d-flex flex-wrap">
+            <div class="">
+              <label class="font-weight-bold d-flex" for="smartToggleSwitch"
+                >Shiprocket Decides
+                <div
+                  class="custom-control custom-switch ml-5"
+                  matTooltip="If you choose Smart assignment, all orders from non-rush pincodes will be assigned according to Shiprocket’s logic and you will be charged a flat fee. If you choose Courier Priority, all orders from non-rush pincodes will be assigned according to the courier rules you have set"
+                  matTooltipPosition="right"
+                >
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="smartToggleSwitch"
+                    [(ngModel)]="is_smart"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  <span class="custom-control-label"></span>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12" formGroupName="service_type_zones">
+        <ng-container *ngIf="is_smart">
+          <div class="row mb-3">
+            <div class="col-12 font-weight-bold">Select Shipping Priority</div>
+          </div>
+          <div class="row mb-3 justify-content-between">
+            <ng-container *ngFor="let zone of availableZones">
+              <div class="col-sm">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ zone.name }}</mat-label>
+                  <mat-select [formControlName]="zone.value">
+                    <ng-container *ngFor="let st of shippingMethod | keyvalue">
+                      <mat-option [value]="st.value">{{ st.key }}</mat-option>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+
+      <div
+        class="col-12"
+        *ngIf="fbsSettings?.is_rush"
+        formGroupName="shipping_method_rate"
+      >
+        <div class="row mb-3">
+          <div class="col-12 font-weight-bold">
+            Shipping Method Charges
+            <br />
+            <small class="text-muted"
+              >These prices will be reflected on your Shopify checkout page
+              under shipping methods</small
+            >
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Standard</mat-label>
+              <input matInput type="number" formControlName="standard" />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Express</mat-label>
+              <input matInput type="number" formControlName="express" />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Rush</mat-label>
+              <input matInput type="number" formControlName="rush" />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Dark Store</mat-label>
+              <input matInput type="number" formControlName="darkstore" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div>
+          <span class="font-weight-bold">Shopify Integration</span>
+          <button
+            type="button"
+            mat-flat-button
+            class="mx-2 btn-purple text-white"
+            routerLink="/shopify"
+          >
+            Configure
+          </button>
+        </div>
+      </div>
+
+      <!-- <div class="col-12 d-flex mb-3">
+        <label class="font-weight-bold pointer" for="rush"> Rush </label>
+        <div class="custom-control custom-switch ml-2">
+          <input
+            type="checkbox"
+            id="rush"
+            class="custom-control-input"
+            formControlName="is_rush"
+          />
+          <label class="custom-control-label pointer" for="rush"></label>
+        </div>
+      </div> -->
+    </div>
+  </div>
+
+  <hr />
+  <div class="text-center">
+    <button
+      mat-flat-button
+      type="submit"
+      class="float-sm-right my-2 btn-purple text-white py-1 px-5"
+    >
+      Save
+    </button>
+  </div>
+</form>

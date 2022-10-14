@@ -1,0 +1,58 @@
+.disable-menu {
+  color: black !important;
+}
+
+.single_date_picker ::ng-deep .mat-form-field-underline {
+  display: none;
+}
+.single_date_picker ::ng-deep .mat-form-field-infix {
+  top: -13px;
+}
+.single_date_picker ::ng-deep .mat-form-field-suffix {
+  top: -8px;
+}
+
+::ng-deep .menu2,
+::ng-deep .date-menu {
+  & .mat-menu-item {
+    font-size: 12px;
+  }
+}
+
+::ng-deep .filter-select {
+  font-size: 12px !important;
+
+  & .mat-pseudo-checkbox {
+    &::after {
+      top: 0.4px;
+      left: 0.4px;
+    }
+
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.resizeFont {
+  font-size: 12px;
+}
+
+.date-active {
+  color: blue;
+  font-weight: bold;
+}
+
+.date-deactive {
+  color: rgba(0, 0, 0, 0.54);
+  font-weight: normal;
+}
+
+.search-section-icon {
+  width: 14px;
+  height: 14px;
+  line-height: 1rem;
+}
+
+.filter_chip {
+  height: unset;
+}

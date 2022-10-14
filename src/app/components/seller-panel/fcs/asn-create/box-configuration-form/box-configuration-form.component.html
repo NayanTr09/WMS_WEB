@@ -1,0 +1,164 @@
+<div class="text-center">
+  <form [formGroup]="boxConfig" (submit)="onClickSubmit($event)">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-6">
+        <h2 class="font-weight-bold">How are you packing these products?</h2>
+        <p class="text-muted">
+          Add the number of boxes that you sending and add the products in those
+          boxes.
+        </p>
+      </div>
+    </div>
+    <br />
+
+    <ng-container *ngIf="getBoxDetails.length; else zeroProducts">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 bdr-g br-10 p-0 w-95 table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <ng-template #extra>
+                  <th class="align-middle" *ngIf="!isBulk">
+                    <button
+                      type="button"
+                      (click)="addColumn()"
+                      class="bg-light text-primary shadow-none border border-primary rounded add-btn"
+                    >
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  </th>
+                </ng-template>
+                <ng-container
+                  *ngFor="
+                    let key of objectKeys(displayedColumns);
+                    let i = index
+                  "
+                >
+                  <ng-container
+                    *ngIf="displayedColumns[key] !== 'actions'; else extra"
+                  >
+                    <!-- with delete button -->
+                    <th
+                      class="align-middle"
+                      *ngIf="!fixedColumns.includes(displayedColumns[key])"
+                    >
+                      {{ displayedColumns[key] }}
+                      <mat-icon
+                        class="text-danger pointer"
+                        type="button"
+                        *ngIf="displayedColumns[key] !== 'Box 1'"
+                        (click)="removeColumn(i, key)"
+                        >highlight_off</mat-icon
+                      >
+                    </th>
+
+                    <!-- simple render -->
+                    <th
+                      class="align-middle"
+                      *ngIf="fixedColumns.includes(displayedColumns[key])"
+                    >
+                      {{ displayedColumns[key] }}
+                    </th>
+                  </ng-container>
+                </ng-container>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container
+                formArrayName="boxDetails"
+                *ngFor="let row of getBoxDetails.controls; let idx = index"
+              >
+                <tr [formGroupName]="idx" [class]="wrongValues[idx]">
+                  <td
+                    class="align-middle"
+                    *ngFor="let column of objectKeys(displayedColumns)"
+                  >
+                    <ng-container
+                      *ngIf="fixedColumns.includes(displayedColumns[column])"
+                    >
+                      {{ row.value[column] }}
+                    </ng-container>
+                    <ng-container
+                      *ngIf="!fixedColumns.includes(displayedColumns[column])"
+                    >
+                      <mat-form-field
+                        style="width: 6rem"
+                        class="input-product"
+                        appearance="outline"
+                        floatLabel="never"
+                      >
+                        <input
+                          matInput
+                          type="number"
+                          [formControlName]="column"
+                          [readonly]="isBulk"
+                        />
+
+                        <mat-error
+                          *ngIf="
+                            getBoxDetails.controls[idx].controls[
+                              column
+                            ].hasError('min')
+                          "
+                        >
+                          Invalid value
+                        </mat-error>
+                      </mat-form-field>
+                    </ng-container>
+                  </td>
+                  <td></td>
+                </tr>
+              </ng-container>
+              <tr *ngIf="isBulk && skuLeft">
+                <td [attr.colspan]="skuLeftcolcount">
+                  <span class="pull-right">... {{ skuLeft }} more items.</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+    <br />
+    <div class="row" *ngIf="isB2BEnabled">
+      <div class="col">
+        <h3 class="font-weight-bold mb-1">How would you use this inventory?</h3>
+        <mat-radio-group formControlName="inventoryType">
+          <mat-radio-button color="primary" class="voilet-radio" value="b2b"
+            >B2B</mat-radio-button
+          >
+          <mat-radio-button
+            color="primary"
+            value="b2c"
+            class="voilet-radio ml-3"
+            >B2C</mat-radio-button
+          >
+          <mat-error
+            *ngIf="boxConfig.get('inventoryType').hasError('required')"
+          >
+            Inventory type is <strong>required</strong>
+          </mat-error>
+        </mat-radio-group>
+      </div>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between align-items-center">
+      <button mat-stroked-button type="button" (click)="onClickPrev()">
+        Previous
+      </button>
+      <div class="text-muted">{{ formStatus }}</div>
+      <button mat-flat-button class="btn-purple text-light" type="submit">
+        Next
+      </button>
+    </div>
+  </form>
+</div>
+
+<ng-template #zeroProducts>
+  <div
+    class="d-flex align-items-center justify-content-center"
+    style="height: 20vh"
+  >
+    <h2 class="text-muted font-weight-bold">No Products Found</h2>
+  </div>
+</ng-template>

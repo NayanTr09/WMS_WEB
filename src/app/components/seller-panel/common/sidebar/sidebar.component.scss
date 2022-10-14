@@ -1,0 +1,23 @@
+@import '../../../../../assets/scss/main.scss';
+
+.active {
+  background-color: rgba(0, 0, 0, 0.04);
+  color: $voilet;
+}
+
+.selected {
+  & .mat-expansion-panel-header {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+  }
+
+  & .mat-expansion-panel-header-title > .menu-icon,
+  & .mat-expansion-panel-header-title > .side-nav-text {
+    color: $voilet !important;
+  }
+}
+
+.img-icon {
+  width: 2rem;
+  padding-left: 10px;
+  margin-right: 10px;
+}

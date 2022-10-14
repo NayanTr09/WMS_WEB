@@ -1,0 +1,19 @@
+.pending {
+  color: #cc0000;
+  background-color: #ffcccc;
+}
+
+.completed {
+  color: #2c9f29;
+  background-color: #bffeb9;
+}
+
+.table-source {
+  & th {
+    text-align: center;
+  }
+
+  & td {
+    text-align: center;
+  }
+}

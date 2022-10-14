@@ -1,0 +1,71 @@
+@import "../../../../../assets/scss/main.scss";
+
+.span-badge {
+  background-color: $voilet;
+  color: white;
+  left: -1.6rem;
+  font-size: 12px;
+  padding: 0.6em 2em;
+}
+
+.card-div {
+  @extend .br-10;
+}
+
+.product-img {
+  & img {
+    height: 100px;
+    margin-left: 0.25rem;
+  }
+}
+
+.nav-timeline {
+  & a {
+    font-weight: bold;
+    color: black;
+  }
+  & .active {
+    border-bottom: 2px solid $voilet;
+    color: $voilet;
+  }
+}
+
+.button-edit {
+    color: $voilet;
+    opacity: 1;
+
+    &:hover{
+        opacity: 1 !important;
+    }
+}
+
+.div-avatar {
+  width: 3.2rem;
+  height: 3.2rem;
+  line-height: 3.2rem;
+  font-size: 20px;
+  font-weight: bolder;
+  color: white;
+  letter-spacing: 2px;
+  background: rgb(235, 138, 47);
+}
+
+
+.timeline-container, .tracking-container {
+    height: 15rem;
+}
+
+.back-btn {
+    border: 2px solid $voilet;
+    color: $voilet;
+    font-size: 20px;
+
+    & .mat-icon {
+        height: 1.9rem;
+    }
+}
+
+.is-invalid {
+  // overwriting bootstrap
+  border-color: var(--red) !important;
+}

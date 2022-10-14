@@ -1,0 +1,169 @@
+<div class="modal-content">
+  <div class="header text-center">
+    <h3>WELCOME!</h3>
+    <!-- <h4>Let's Get Started</h4>
+          <span class="line"></span> -->
+  </div>
+  <div class="row text-center">
+    <div class="col-12">
+      <p class="text-grey">We would like to understand your business better.</p>
+      <p class="text-grey">
+        Answer a few questions to help us provide you a seamless fulfillment
+        experience.
+      </p>
+      <hr />
+    </div>
+
+    <div class="col-12 text-center text-sm-left">
+      <!-- <p>1. The number of monthly orders you process in a month is</p> -->
+      <p>1. How many orders do you ship per month?*</p>
+      <mat-form-field appearance="outline" class="appearance-purple">
+        <mat-label class="text-purple">Select monthly orders</mat-label>
+        <mat-select [(ngModel)]="monthlyOrders">
+          <ng-container *ngFor="let range of orderRange">
+            <mat-option [value]="range.value"> {{ range.name }} </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+      <p *ngIf="displayError[0]" class="text-red">Monthly orders is required</p>
+    </div>
+    <div class="col-12 text-center text-sm-left">
+      <!-- <p>2. Your business category is</p> -->
+      <p>2. Category of Product that you are selling?*</p>
+      <mat-form-field appearance="outline" class="appearance-purple">
+        <mat-label class="text-purple">Select business category</mat-label>
+        <mat-select [(ngModel)]="businessCategory">
+          <ng-container *ngFor="let category of businessCategories">
+            <mat-option [value]="category.value" style="min-width:fit-content;">
+              {{ category.name }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+      <p *ngIf="displayError[1]" class="text-red">
+        Business category is required
+      </p>
+    </div>
+    <div class="col-12 text-center text-sm-left">
+      <p>3. What Primary Solutions Are You Looking For?*</p>
+      <mat-form-field appearance="outline" class="appearance-purple" style="min-width:fit-content;">
+        <mat-label class="text-purple">Select Primary Solutions</mat-label>
+        <mat-select [(ngModel)]="PrimarySolution" multiple style="min-width:fit-content;">
+          <ng-container *ngFor="let solutions of PrimarySolutions">
+            <mat-option [value]="solutions.value" >
+              {{ solutions.name }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+      <p *ngIf="displayError[2]" class="text-red">
+        Primary solutions is required
+      </p>
+    </div>
+    <div class="col-12 text-center text-sm-left">
+      <p>4. Are you using any existing Warehouse/Storage services?*</p>
+      <mat-form-field appearance="outline" class="appearance-purple">
+        <mat-label class="text-purple">Select</mat-label>
+        <mat-select [(ngModel)]="servicesOption">
+          <ng-container *ngFor="let serviceopt of servicesOptionArr">
+            <mat-option [value]="serviceopt.value">
+              {{ serviceopt.name }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+      <!-- <p *ngIf="displayError[3]" class="text-red">
+        Warehouse/Storage Services is required
+      </p> -->
+    </div>
+    <div class="col-12 text-center text-sm-left" *ngIf="servicesOption == 'Yes'">
+      <p class="text-red">
+        Thank You For Sharing Your Responses. Our Team Will Get In Touch With You Shortly 
+      </p>
+    </div>
+
+    <div class="col-12 text-center text-sm-left" *ngIf="servicesOption == 'No'">
+      <p>5. What Services Are You Looking For?</p>
+      <mat-form-field appearance="outline" class="appearance-purple">
+        <mat-label class="text-purple">Select</mat-label>
+        <mat-select [(ngModel)]="Service">
+          <ng-container *ngFor="let service of Services">
+            <mat-option [value]="service.value">
+              {{ service.name }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+      <!-- <p *ngIf="displayError[3]" class="text-red">
+        Warehouse/Storage Services is required
+      </p> -->
+    </div>
+
+    <div class="col-12 text-center text-sm-left" *ngIf="servicesOption == 'No' && (Service === 'Warehousing And Order Processing Services' || Service === 'Both')">
+      <p>6. In Which City Are You Looking For Warehousing Services?</p>
+      <mat-form-field appearance="outline" class="appearance-purple">
+        <mat-label class="text-purple">Select</mat-label>
+        <mat-select [(ngModel)]="City">
+          <ng-container *ngFor="let city of Cities">
+            <mat-option [value]="city.value">
+              {{ city.name }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+      <!-- <p *ngIf="displayError[3]" class="text-red">
+        Warehouse/Storage Services is required
+      </p> -->
+    </div>
+
+    <!-- <div class="col-12 text-center text-sm-left">
+      <p>3. Select atleast one warehouse</p>
+      <div *ngIf="!warehouseList.length" class="my-4 text-muted">
+        Loading...
+      </div>
+      <div
+        class="d-flex justify-content-around justify-content-md-start flex-wrap"
+        *ngIf="warehouseList.length"
+      >
+        <label
+          for="{{ warehouseItem.warehouse_code }}"
+          *ngFor="let warehouseItem of warehouseList"
+          class="pointer mr-md-2 br-6 bdr-lg p-sm inline text-center warehouse-select relative"
+        >
+          <span class="material-icons text-grey"> home_work </span><br />
+          <span class="text-purple"> {{ warehouseItem.name }} </span>
+          <input
+            type="checkbox"
+            [(ngModel)]="warehouse[warehouseItem.warehouse_code]"
+            value="{{ warehouseItem.warehouse_code }}"
+            #ctrlName="ngModel"
+            id="{{ warehouseItem.warehouse_code }}"
+            style="display: none"
+            name="selected_warehouse[]"
+          />
+          <span
+            *ngIf="warehouse[warehouseItem.warehouse_code]"
+            class="check-icon material-icons text-green text-middle"
+            >check_circle</span
+          >
+        </label>
+      </div>
+      <p class="text-red mt-sm" *ngIf="displayError[2]">
+        Please select a warehouse.
+      </p>
+    </div> -->
+
+    <div class="col-12 text-center">
+      <button
+        mat-raised-button
+        class="btn-purple text-white btn-action"
+        (click)="welcomeStepper()"
+      >
+        Go To Dashboard</button
+      ><br />
+    </div>
+  </div>
+</div>
+<div class="loader" *ngIf="showLoader">
+  <img src="assets/images/loader.svg" alt="" /> Please wait
+</div>

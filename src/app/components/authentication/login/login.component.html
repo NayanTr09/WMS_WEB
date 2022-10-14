@@ -1,0 +1,143 @@
+<mat-icon svgIcon="assets:logofull" class="logofull"></mat-icon>
+<h1>Welcome To Shiprocket Fulfillment</h1>
+<div
+  fxLayout="row"
+  fxLayoutGap="10px"
+  fxLayoutAlign="center center"
+  *ngIf="!viewVerifyOTP && !viewVerifyPhone"
+>
+  <button
+    class="social-icons shadow-social"
+    mat-flat-button
+    (click)="signInWithFB()"
+  >
+    <img src="../../../assets/images/icons/facebook.svg" />
+    <strong class="text-muted ml-3">FACEBOOK</strong>
+  </button>
+  <button
+    class="social-icons shadow-social"
+    mat-flat-button
+    (click)="signInWithGoogle()"
+  >
+    <img src="../../../assets/images/icons/google.svg" />
+    <strong class="text-muted ml-3">GOOGLE</strong>
+  </button>
+</div>
+<div
+  class="text-center pv border-left-right"
+  *ngIf="!viewVerifyOTP && !viewVerifyPhone"
+>
+  <span></span>OR
+  <span></span>
+</div>
+
+<span *ngIf="!viewVerifyOTP && !viewVerifyPhone">
+  <form (ngSubmit)="onLogin()" [formGroup]="loginUser" fxFill>
+    <mat-form-field fxFill>
+      <mat-label>Enter Email</mat-label>
+      <input matInput required formControlName="userid" />
+      <mat-error>{{
+        loginError.userid ? loginError.userid : 'Provide a valid email'
+      }}</mat-error>
+    </mat-form-field>
+    <mat-form-field fxFill>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        required
+        formControlName="password"
+        [type]="hide ? 'password' : 'text'"
+      />
+      <button
+        type="button"
+        class="hide"
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+      >
+        <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error>{{
+        loginError.password ? loginError.password : 'Password field is required'
+      }}</mat-error>
+    </mat-form-field>
+    <a class="text-purple text-decoration-none" routerLink="/recovery"
+      >Forgot Password?</a
+    >
+    <button fxFill class="btn-action btn-success" mat-flat-button>Login</button>
+  </form>
+  <h4 class="text-muted text-center">
+    New to Shiprocket Fulfillment?
+    <a class="text-purple text-decoration-none" routerLink="/register"
+      >Sign Up Now</a
+    >
+  </h4>
+</span>
+<div class="loader" *ngIf="showLoader">
+  <img src="assets/images/loader.svg" alt="" /> Please wait
+</div>
+
+<span [hidden]="!viewVerifyPhone">
+  <form [formGroup]="phoneForm">
+    <mat-form-field fxFill class="mt-sm">
+      <mat-label>Enter Phone Number</mat-label>
+      <input matInput required formControlName="phone" />
+      <mat-error *ngIf="phoneForm.controls.phone.errors">{{
+        phoneForm.controls.phone.errors?.required
+          ? 'Phone number is required'
+          : phoneForm.controls.phone.errors.pattern
+          ? 'Mobile number is invalid'
+          : phoneForm.get('phone').errors.apiError
+          ? phoneForm.get('phone').errors.apiError
+          : 'This mobile number must be of 10 digits.'
+      }}</mat-error>
+    </mat-form-field>
+    <button
+      fxFill
+      class="btn-action btn-success"
+      mat-flat-button
+      (click)="verifyPhone()"
+    >
+      Send Verification Code
+    </button>
+  </form>
+</span>
+
+<span *ngIf="viewVerifyOTP && !viewVerifyPhone">
+  <p class="guest-intro">
+    Hi {{ userName }},<br />
+    <small
+      >You will receive a SMS containing the verification code<br />
+      on your number +91-{{
+        phoneForm.controls.phone.value
+          ? phoneForm.controls.phone.value
+          : registerUser.controls.phone.value
+      }}
+    </small>
+  </p>
+  <form [formGroup]="otpForm">
+    <mat-form-field fxFill class="mt-sm">
+      <mat-label>Enter OTP</mat-label>
+      <input matInput required formControlName="otp" />
+
+      <mat-error *ngIf="otpForm.controls.otp.errors?.required"
+        >Please enter OTP</mat-error
+      >
+      <mat-error *ngIf="otpForm.get('otp').errors?.invalidNumber">{{
+        otpForm.get('otp').errors?.invalidNumber
+      }}</mat-error>
+    </mat-form-field>
+    <a (click)="resendOTP()" class="text-purple pointer">Re-send code</a> |
+    <a (click)="viewVerifyPhone = true" class="text-purple pointer"
+      >Change Phone Number</a
+    >
+    <button
+      fxFill
+      class="btn-action btn-success"
+      mat-flat-button
+      (click)="verifyOTP()"
+    >
+      Verify My Phone
+    </button>
+  </form>
+</span>

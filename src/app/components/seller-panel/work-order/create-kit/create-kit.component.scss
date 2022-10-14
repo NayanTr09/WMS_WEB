@@ -1,0 +1,175 @@
+@import '../../../../../assets/scss/main.scss';
+
+$new-grey: #f9f9f9;
+
+.next-btn {
+  & .mat-icon {
+    transform: rotate(180deg);
+  }
+}
+
+.uploadBtn {
+  height: 3rem;
+  margin-top: 0.2rem;
+  min-width: 3rem;
+}
+
+:host {
+  display: block;
+}
+
+// .open-close-container {
+//   border: 1px solid #dddddd;
+//   margin-top: 1em;
+//   padding: 20px 20px 0px 20px;
+//   color: #000000;
+//   font-weight: bold;
+//   font-size: 20px;
+// }
+
+.rm-top-border {
+  & thead th {
+    border-top-color: transparent;
+  }
+}
+
+.add-column-btn {
+  padding-left: 0;
+  padding-right: 0;
+  width: 2.5rem;
+  min-width: unset;
+  float: right;
+  border-color: $voilet;
+}
+
+.badge-custom {
+  background-color: $voilet;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  // line-height: 1.5rem;
+  opacity: 1;
+  color: white;
+}
+
+.shipping-info {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.download-tab {
+  width: 33%;
+  text-align: center;
+  // padding-left: 2rem;
+}
+
+.tr-total {
+  background-color: $new-grey;
+}
+
+.sku-details {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .tab-view {
+    width: 100% !important;
+  }
+
+  .awb-num {
+    width: unset !important;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .mob-view {
+    width: 100% !important;
+  }
+
+  .w-90 {
+    width: 90% !important;
+  }
+
+  .w-95 {
+    width: 95% !important;
+  }
+  .awb-num {
+    width: unset !important;
+  }
+}
+
+$color1: #eaf0fd;
+
+.defaultColor {
+  color: $color1;
+}
+
+.opacity-none {
+  opacity: 1;
+}
+
+.locationCard {
+  min-width: 20%;
+  background-color: $light-grey-2;
+}
+
+.active {
+  // border-color: $voilet !important;
+  color: $voilet;
+
+  & .defaultColor {
+    color: $voilet;
+  }
+
+  & .fcBtnIcon {
+    color: $light-green;
+  }
+}
+
+.fcBtnIcon {
+  right: 0.3rem;
+  color: $light-grey;
+}
+
+.fcHomeIcon {
+  zoom: 1.8;
+}
+
+.table-container {
+  overflow: auto;
+  max-height: 25rem;
+}
+
+.inventoryTable {
+  & .mat-cell {
+    @extend .p-sm;
+    color: var(--gray);
+  }
+
+  & .mat-header-cell {
+    font-weight: bold;
+    color: black;
+  }
+
+  & .mat-cell:first-of-type {
+    text-align: center;
+  }
+
+  & .mat-header-cell:first-of-type,
+  & .mat-header-cell:last-of-type {
+    padding-left: unset;
+    width: 5rem;
+    text-align: center;
+  }
+
+  & tr:last-child {
+    td {
+      border-bottom-color: transparent;
+    }
+  }
+
+  .fixInput {
+    width: 5rem;
+  }
+}

@@ -1,0 +1,256 @@
+<mat-icon svgIcon="assets:logofull" class="logofull"></mat-icon>
+<h1>Welcome To Shiprocket Fulfillment</h1>
+<!--<p class="guest-intro">Let's get you all setup so you can verify your account <br> and get set go on the fulfillment journey.</p>-->
+
+<div *ngIf="!viewVerifyOTP && !viewVerifyPhone">
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
+    <button
+      class="social-icons shadow-social"
+      mat-flat-button
+      (click)="signInWithFB()"
+    >
+      <img src="../../../assets/images/icons/facebook.svg" />
+      <strong class="text-muted ml-3">FACEBOOK</strong>
+    </button>
+    <button
+      class="social-icons shadow-social"
+      mat-flat-button
+      (click)="signInWithGoogle()"
+    >
+      <img src="../../../assets/images/icons/google.svg" />
+      <strong class="text-muted ml-3">GOOGLE</strong>
+    </button>
+  </div>
+
+  <div class="text-center pv border-left-right">
+    <span></span>OR
+    <span></span>
+  </div>
+</div>
+
+<span *ngIf="!viewVerifyOTP && !viewVerifyPhone">
+  <form (ngSubmit)="onRegister()" [formGroup]="registerUser">
+    <div fxLayout="row" fxLayoutGap="10px">
+      <div fxFlex="50">
+        <mat-form-field fxFill class="mt-sm">
+          <mat-label>First Name</mat-label>
+          <input matInput required formControlName="first_name" />
+          <mat-error *ngIf="registerUser.controls.first_name.errors">{{
+            registerUser.controls.first_name.errors?.required
+              ? 'First name is required'
+              : registerUser.controls.first_name.errors?.pattern
+              ? 'First name should contain only alphabets'
+              : 'First name should be atleast ' +
+                registerUser.controls.first_name.errors.minlength
+                  .requiredLength +
+                ' characters long.'
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50">
+        <mat-form-field fxFill class="mt-sm">
+          <mat-label>Last Name</mat-label>
+          <input matInput required formControlName="last_name" />
+          <mat-error *ngIf="registerUser.controls.last_name.errors">{{
+            registerUser.controls.last_name.errors?.required
+              ? 'Last name is required'
+              : registerUser.controls.last_name.errors?.pattern
+              ? 'Last name should contain only alphabets'
+              : 'Last name should be atleast ' +
+                registerUser.controls.last_name.errors.minlength
+                  .requiredLength +
+                ' characters long.'
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="10px">
+      <div fxFlex="50">
+        <mat-form-field fxFill class="mt-sm">
+          <mat-label>Email</mat-label>
+          <input type="email" matInput required formControlName="email" />
+          <mat-error *ngIf="registerUser.controls.email.errors">{{
+            registerUser.controls.email.errors?.email
+              ? 'Provide a valid email'
+              : registerUser.controls.email.errors.required
+              ? 'Email is required'
+              : registerUser.controls.email.apiError
+          }}</mat-error>
+          <mat-error *ngIf="registerUser.get('email').errors?.apiError">{{
+            registerUser.get('email').errors?.apiError
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50">
+        <mat-form-field fxFill class="mt-sm">
+          <mat-label>Password</mat-label>
+          <input type="password" matInput required formControlName="password" />
+          <mat-error *ngIf="registerUser.controls.password.errors"
+            >{{
+              registerUser.controls.password.errors?.minlength
+                ? 'Minimum length should be ' +
+                  registerUser.controls.password.errors.minlength.requiredLength
+                : registerUser.controls.password.errors.pattern
+                ? 'Password should follow the given policy'
+                : 'Password is required'
+            }}
+            <mat-icon
+              *ngIf="registerUser.controls.password.errors"
+              [matTooltip]="passwordErr"
+              matTooltipPosition="after"
+              matTooltipClass="tooltip-list"
+              style="
+                vertical-align: middle;
+                margin-left: 5px;
+                cursor: pointer;
+                transform: scale(1.3);
+              "
+              >error</mat-icon
+            >
+          </mat-error>
+          <mat-error *ngIf="registerUser.get('password').errors?.apiError">{{
+            registerUser.get('password').errors?.apiError
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="10px">
+      <div fxFlex="50">
+        <mat-form-field fxFill class="mt-sm">
+          <!-- <mat-label>Company Name</mat-label> -->
+          <mat-label>Website</mat-label>
+          <input matInput formControlName="company" />
+          <mat-error *ngIf="registerUser.controls.company.errors"
+            >Website format is incorrect</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <div fxFlex="50">
+        <mat-form-field fxFill class="mt-sm">
+          <mat-label>Mobile Number</mat-label>
+          <input matInput required formControlName="phone" />
+          <mat-error *ngIf="registerUser.controls.phone.errors">{{
+            registerUser.controls.phone.errors?.required
+              ? 'Mobile number is required'
+              : registerUser.controls.phone.errors.pattern
+              ? 'Mobile number is invalid'
+              : registerUser.controls.phone.errors.minlength ||
+                registerUser.controls.phone.errors.maxlength
+              ? 'Mobile number must be of 10 digits.'
+              : ''
+          }}</mat-error>
+          <!-- <mat-error
+            *ngIf="
+              registerUser.get('phone').errors?.apiError == 
+              'The phone has already been taken.'
+            "
+            >{{ 'This mobile number is already registered with us' }}</mat-error
+          > -->
+          <mat-error
+            *ngIf="registerUser.get('phone').errors?.apiError == phoneUniqueErr"
+            >{{ registerUser.get('phone').errors?.apiError }}</mat-error
+          >
+          <mat-error
+            *ngIf="registerUser.get('phone').errors?.apiError == phoneErr"
+            >{{ 'Mobile number is not correct' }}</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="mt-sm">
+      <mat-checkbox class="example-margin gray-checkbox" formControlName="agree"
+        ><span class="guest-intro text-grey">
+          I agree to Shiprocket Fulfillment's
+          <a
+            class="text-purple text-decoration-none"
+            href="https://www.shiprocket.in/terms-conditions/"
+            target="_blank"
+            >Terms & Conditions</a
+          ></span
+        ></mat-checkbox
+      >
+    </div>
+
+    <button
+      [disabled]="!registerUser.controls.agree.value"
+      fxFill
+      class="btn-action btn-success"
+      mat-flat-button
+    >
+      Sign Up
+    </button>
+  </form>
+  <h4 class="text-center text-muted">
+    Already Have An Account?
+    <a class="text-purple text-decoration-none" routerLink="/login">Log In</a>
+  </h4>
+</span>
+
+<span [hidden]="!viewVerifyPhone">
+  <form [formGroup]="phoneForm">
+    <mat-form-field fxFill class="mt-sm">
+      <mat-label>Enter Phone Number</mat-label>
+      <input matInput required formControlName="phone" />
+      <mat-error *ngIf="phoneForm.controls.phone.errors">{{
+        phoneForm.controls.phone.errors?.required
+          ? 'Phone number is required'
+          : phoneForm.controls.phone.errors.pattern
+          ? 'Mobile number is invalid'
+          : phoneForm.get('phone').errors.apiError
+          ? phoneForm.get('phone').errors.apiError
+          : 'This mobile number must be of 10 digits.'
+      }}</mat-error>
+    </mat-form-field>
+    <button
+      fxFill
+      class="btn-action btn-success"
+      mat-flat-button
+      (click)="verifyPhone()"
+    >
+      Send Verification Code
+    </button>
+  </form>
+</span>
+<span *ngIf="viewVerifyOTP && !viewVerifyPhone">
+  <p class="guest-intro">
+    Hi {{ userName }},<br />
+    <small
+      >You will receive a SMS containing the verification code<br />
+      on your number +91-{{
+        phoneForm.controls.phone.value
+          ? phoneForm.controls.phone.value
+          : registerUser.controls.phone.value
+      }}
+    </small>
+  </p>
+  <form [formGroup]="otpForm">
+    <mat-form-field fxFill class="mt-sm">
+      <mat-label>Enter OTP</mat-label>
+      <input matInput required formControlName="otp" />
+
+      <mat-error *ngIf="otpForm.controls.otp.errors?.required"
+        >Please enter OTP</mat-error
+      >
+      <mat-error *ngIf="otpForm.get('otp').errors?.invalidNumber">{{
+        otpForm.get('otp').errors?.invalidNumber
+      }}</mat-error>
+    </mat-form-field>
+    <a (click)="resendOTP()" class="text-purple pointer">Re-send code</a> |
+    <a (click)="viewVerifyPhone = true" class="text-purple pointer"
+      >Change Phone Number</a
+    >
+
+    <button
+      fxFill
+      class="btn-action btn-success"
+      mat-flat-button
+      (click)="verifyOTP()"
+    >
+      Verify My Phone
+    </button>
+  </form>
+</span>
+
+<div class="loader" *ngIf="showLoader">
+  <img src="assets/images/loader.svg" alt="" /> Please wait
+</div>

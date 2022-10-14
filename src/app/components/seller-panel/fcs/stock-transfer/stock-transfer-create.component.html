@@ -1,0 +1,53 @@
+<app-my-loader></app-my-loader>
+<div class="row">
+  <div class="col-md-8">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent mb-0">
+        <li class="breadcrumb-item">
+          <a routerLink="/fcs/stock-transfer" #asnPage class="text-primary"
+            >Stock Transfer</a
+          >
+        </li>
+        <li class="breadcrumb-item active">Create</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="col-md-4 text-right">
+    <button
+      mat-flat-button
+      *ngIf="!isAwbAvailable"
+      class="btn btn-purple ml-2"
+      (click)="asnPage.click()"
+    >
+      Finish Later
+    </button>
+  </div>
+</div>
+
+<div class="my-5">
+  <app-asn-status-bar
+    [position]="position"
+    [steps]="steps"
+  ></app-asn-status-bar>
+</div>
+
+<div class="row justify-content-center my-5">
+  <div class="col-md-10 border rounded p-3 pt-4">
+    <app-stock-transfer-form
+      *ngIf="position === 1"
+      [asnData]="stockTransferData"
+      (postSave)="tiggerPostSave($event)"
+    ></app-stock-transfer-form>
+
+    <app-stock-transfer-products-form
+      *ngIf="position === 2"
+      (selectionChange)="changePosition($event)"
+    ></app-stock-transfer-products-form>
+
+    <app-stock-transfer-details
+      [stData]="stockTransferData"
+      *ngIf="position === 3"
+      (selectionChange)="changePosition($event)"
+    ></app-stock-transfer-details>
+  </div>
+</div>

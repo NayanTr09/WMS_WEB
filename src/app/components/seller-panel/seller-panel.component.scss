@@ -1,0 +1,35 @@
+@import '../../../assets/scss/partials/sidenav.scss';
+@import '../../../assets/scss/partials/toolbar.scss';
+.mat-horizontal-stepper-header-container {
+  display: none !important;
+}
+
+.footer-text {
+  font-size: 70%;
+}
+
+.menu-icon {
+  width: 1.5rem;
+}
+
+.logofull {
+  @extend .pointer;
+  width: 10rem;
+  height: 4rem;
+}
+
+.margin-top {
+  margin-top: 4rem;
+}
+
+@media screen and (max-width: 500px) {
+  .logofull {
+    @extend .pointer;
+    width: 8rem;
+    height: 3rem;
+  }
+
+  .margin-top {
+    margin-top: 3rem;
+  }
+}

@@ -1,0 +1,88 @@
+@import '../../../../../../assets/scss/main.scss';
+
+.timeline {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.li {
+  transition: all 200ms ease-in;
+}
+
+.timestamp {
+  height: 1rem;
+  width: 0;
+  white-space: nowrap;
+  padding-left: 9rem;
+  font-weight: bold;
+
+  & p {
+    position: absolute;
+    left: 63%;
+    top: -0.9rem;
+  }
+}
+
+li:first-of-type .timestamp {
+  padding: unset;
+
+  & p {
+    left: -2rem;
+    // right: -1.2rem;
+  }
+}
+
+.status {
+  // left: 1rem;
+  border-top: 5px solid #d6dce0;
+  position: relative;
+  transition: all 200ms ease-in;
+  &:before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-color: #d6dce0;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    position: absolute;
+    top: -0.8rem;
+    right: 0rem;
+    transition: all 200ms ease-in;
+  }
+}
+
+.li.complete {
+  .status {
+    border-top: 5px solid $voilet;
+    &:before {
+      background-color: $voilet;
+      border: none;
+      content: '\2713';
+      text-align: center;
+      color: white;
+      transition: all 200ms ease-in;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .timestamp {
+    padding-left: 8rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .timeline {
+    padding-left: 1rem;
+  }
+  .timestamp {
+    padding-left: 5rem;
+
+    & p {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,62 @@
+<div class="text-center">
+  <form (submit)="onClickSubmit($event)">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-6">
+        <h2 class="font-weight-bold">
+          Select the date and slot you will be sending your inventory
+        </h2>
+      </div>
+    </div>
+    <br />
+
+    <div class="row justify-content-center">
+      <div class="col-lg-5 bdr-g br-10 p-0 w-95 table-responsive">
+        <app-asn-calendar
+          [asnId]="asnId"
+          (slotsEmitter)="setSlotsData($event)"
+          [scheduledTime]="scheduledTime"
+          [scheduledDate]="scheduledDate"
+          [scheduledSlot]="scheduledSlot"
+        ></app-asn-calendar>
+      </div>
+      <!-- <div class="col-lg-5 br-10 p-0 w-95 text-center" *ngIf="!showSlots">
+        <h2 class="font-weight-bold">{{ selectedDateData }}.</h2>
+      </div> -->
+      <div class="col-lg-5 br-10 p-0 w-95 text-center" *ngIf="showSlots">
+        <mat-form-field appearance="outline" class="w-75">
+          <mat-label>Select Slot Timing</mat-label>
+          <mat-select
+            (selectionChange)="handleSlotChange($event)"
+            [value]="scheduledSlot"
+          >
+            <mat-option
+              *ngFor="let slot of slotsList"
+              [value]="slot.slot_id"
+              [disabled]="!slot.slotAvailable"
+            >
+              {{ slot.timing }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Please Select a Slot Timing </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <hr />
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="text-muted">{{ formStatus }}</div>
+      <button mat-flat-button class="btn-purple text-light" type="submit">
+        Reschedule
+      </button>
+    </div>
+  </form>
+</div>
+
+<ng-template #zeroProducts>
+  <div
+    class="d-flex align-items-center justify-content-center"
+    style="height: 20vh"
+  >
+    <h2 class="text-muted font-weight-bold">No Products Found</h2>
+  </div>
+</ng-template>

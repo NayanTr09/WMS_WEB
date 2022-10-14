@@ -1,0 +1,13 @@
+version: '3.0'
+services:
+    angular-service:
+      container_name: wms-web-production
+      build: ./angular-docker-wmsweb # Location of our Dockerfile
+      working_dir: /var/www/app
+      image: angular:10.2.3
+      volumes:
+        - ./:/var/www/app
+      ports:
+        - 4201:4201
+      command:
+        bash -c "npm install && ng build --prod"

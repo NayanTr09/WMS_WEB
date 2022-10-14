@@ -1,0 +1,129 @@
+<app-my-loader></app-my-loader>
+<div class="pl-sm pr-sm mb-3">
+  <h1 class="mb-2">Fulfillment Centre</h1>
+  <!-- <p class="text-muted">Lorem ipsum dolor sit amet.</p> -->
+</div>
+<div class="card border-0 rounded-lg">
+  <nav mat-tab-nav-bar class="nav-bar pl-sm pr-sm">
+    <a
+      mat-tab-link
+      *ngFor="let link of navLinks"
+      [routerLink]="link.link"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="rla.isActive"
+      >{{ link.label }}</a
+    >
+
+    <div class="flex-grow-1"></div>
+    <button
+      mat-flat-button
+      *ngIf="activeLink == 'inventory'"
+      class="mr-2 p-0 download-btn"
+      matTooltip="Sync"
+      (click)="syncInventoryChannels()"
+    >
+      <mat-icon>sync</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      *ngIf="['inventory', 'asn', 'bad-stock'].includes(activeLink)"
+      class="m-2 ml-auto download-btn"
+      matTooltip="Download"
+      (click)="downloadCsv(activeLink)"
+    >
+      <mat-icon>get_app</mat-icon>
+    </button>
+
+    <button
+      mat-flat-button
+      *ngIf="activeLink == 'asn'"
+      class="m-2 asn-btn"
+      (click)="navigateToCreateAsn()"
+    >
+      + Add New ASN
+    </button>
+
+    <button
+      mat-flat-button
+      *ngIf="activeLink == 'stock-transfer' && isB2BEnabled"
+      class="m-2 asn-btn"
+      (click)="navigateToCreateStockTransfer()"
+    >
+      + Transfer Stock
+    </button>
+  </nav>
+
+  <a
+    href="#"
+    id="downloadLinkAsn"
+    hidden
+    onclick="return false"
+    appDownload
+    [reponseType]="'export'"
+    [requestData]="qs['asn']"
+    [download_url]="reportASNDownloadURL"
+    [method]="'get'"
+    [type_name]="'All ASN'"
+  ></a>
+
+  <a
+    href="#"
+    id="downloadLink"
+    hidden
+    onclick="return false"
+    appDownload
+    [reponseType]="'export'"
+    [requestData]="qs['inventory']"
+    [download_url]="reportDownloadURL"
+    [method]="'get'"
+    [type_name]="'Product Inventory'"
+  ></a>
+
+  <a
+    href="#"
+    id="badStockReport"
+    hidden
+    onclick="return false"
+    appDownload
+    [reponseType]="'export'"
+    [requestData]="qs['bad-stock']"
+    [download_url]="badStockUrl"
+    [method]="'get'"
+    [type_name]="'Bad Stock'"
+  ></a>
+
+  <inventory-list
+    *ngIf="activeLink == 'inventory'"
+    [query]="query_params['inventory']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading</inventory-list
+  >
+  <asn-list
+    *ngIf="activeLink == 'asn'"
+    [query]="query_params['asn']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading</asn-list
+  >
+  <app-product-catalog
+    *ngIf="activeLink === 'products'"
+    [query]="query_params['products']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading...</app-product-catalog
+  >
+
+  <stock-transfer-list
+    *ngIf="activeLink == 'stock-transfer' && isB2BEnabled"
+    [query]="query_params['stock-transfer']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading</stock-transfer-list
+  >
+
+  <app-bad-stock
+    *ngIf="activeLink == 'bad-stock'"
+    [query]="query_params['bad-stock']"
+    (paramsEvent)="updateQueryParams($event)"
+    >Loading...</app-bad-stock
+  >
+</div>

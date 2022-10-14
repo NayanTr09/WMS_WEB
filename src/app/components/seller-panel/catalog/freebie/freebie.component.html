@@ -1,0 +1,210 @@
+<app-my-loader></app-my-loader>
+<div class="pl-sm pr-sm mb-3 d-flex align-items-center">
+  <button
+    mat-ripple
+    class="px-2 py-1 border border-primary bg-white d-flex align-items-center rounded mr-3"
+    (click)="goBack()"
+  >
+    <mat-icon class="text-purple">arrow_back</mat-icon>
+  </button>
+  <h1 class="mb-0">Add New Insertion</h1>
+</div>
+
+<div class="container-fluid new-black">
+  <div class="row mb-4">
+    <div class="col-sm-12 mb-12 mb-sm-0">
+      <ng-container
+        [ngTemplateOutlet]="readyToSubmit ? orderValueCondition : formTemplate"
+        [ngTemplateOutletContext]="conditionTextObj"
+      ></ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #formTemplate let-data="data">
+  <form
+    [formGroup]="conditionForm"
+    (ngSubmit)="createCondition()"
+    autocomplete="off"
+  >
+    <div class="border p-3 br-10">
+      <h3 class="mb-2 font-weight-bold">Create a condition</h3>
+      <p class="text-muted mb-0">
+        Create a product condition can help you add additional offers such as
+        adding a freebie with a purchase if certain condition is met.
+      </p>
+
+      <div class="mt-4 row">
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="text-muted mb-0"
+              >Condition is applied on</mat-label
+            >
+            <mat-select
+              formControlName="type"
+              class=""
+              (selectionChange)="changeConditionType($event)"
+              required
+            >
+              <mat-option *ngFor="let type of orderType" [value]="type.id">
+                {{ type.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="text-muted mb-0">Condition</mat-label>
+            <mat-select
+              formControlName="condition1"
+              required
+              (selectionChange)="changeCondition()"
+            >
+              <mat-option
+                *ngFor="let condition of conditions"
+                [value]="condition.id"
+              >
+                {{ condition.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-2" *ngIf="selectedOrderType == 1">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Applied on amount</mat-label>
+            <input matInput formControlName="amount1" />
+            <mat-icon
+              *ngIf="isBetween"
+              matSuffix
+              class="pointer"
+              #tip="matTooltip"
+              matTooltip="Comma separated values (for eg: 100,200)"
+              (click)="tip.toggle()"
+              >info</mat-icon
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-2" *ngIf="selectedOrderType == 2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Order SKU is</mat-label>
+            <input
+              matInput
+              type="search"
+              #orderSKUSearch
+              formControlName="order_sku"
+              [matAutocomplete]="orderSKUAutocomplete"
+              (input)="searchProduct($event)"
+            />
+
+            <mat-autocomplete
+              #orderSKUAutocomplete="matAutocomplete"
+              [displayWith]="formatInputValue.bind(this)"
+            >
+              <ng-template #productLoading>
+                <mat-option
+                  *ngIf="orderSKUSearch.value.length > 2"
+                  class="is-loading"
+                  >Loading...</mat-option
+                >
+              </ng-template>
+
+              <ng-container
+                *ngIf="
+                  productSearchedResult | async as options;
+                  else productLoading
+                "
+              >
+                <mat-option *ngFor="let option of options" [value]="option">
+                  {{ option.sku }}
+                </mat-option>
+              </ng-container>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="col"
+          *ngIf="selectedOrderType == 1 || selectedOrderType == 2"
+        >
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Search SKU and Add</mat-label>
+            <mat-chip-list #chipList>
+              <mat-chip
+                *ngFor="let item of freeSkus.value; let i = index"
+                [removable]="true"
+                (removed)="remove(i)"
+              >
+                {{ item.sku }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input
+                type="text"
+                placeholder="Search SKU..."
+                #freeSkusInput
+                [formControl]="dummyCtrl"
+                [matAutocomplete]="auto"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              />
+            </mat-chip-list>
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="selected($event)"
+            >
+              <ng-template #loading1>
+                <mat-option
+                  *ngIf="freeSkusInput.value.length > 2"
+                  class="is-loading"
+                  >Loading...</mat-option
+                >
+              </ng-template>
+
+              <ng-container
+                *ngIf="searchedResult | async as items; else loading1"
+              >
+                <mat-option *ngFor="let item of items" [value]="item">
+                  {{ item.sku }}
+                </mat-option>
+              </ng-container>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <br />
+      <hr />
+
+      <div class="d-flex justify-content-between align-items-center">
+        <button mat-stroked-button (click)="reset()">Reset</button>
+        <button mat-stroked-button class="btn-purple text-light" type="submit">
+          Next
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #orderValueCondition let-data="data">
+  <div
+    class="border p-5 br-10 d-flex justify-content-center align-items-center flex-column"
+  >
+    <img
+      src="../../../../../assets/svg/orderValue.svg"
+      alt="order value"
+      style="height: 40vh"
+    />
+    <h4 class="text-muted mt-4">{{ data.type }} Condition</h4>
+    <h2>
+      {{ data.text }}
+    </h2>
+    <div class="w-100 d-flex justify-content-between">
+      <button mat-stroked-button (click)="goBack()">Back</button>
+      <button mat-flat-button class="btn-purple" (click)="createCondition()">
+        Create Condition
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,49 @@
+@import "../main.scss";
+
+.mat-tab-links {
+  height: 60px;
+  a {
+    height: 60px;
+    opacity: 1;
+    color: #8392a7 !important;
+    &.mat-tab-label-active {
+      font-weight: bold;
+      color: $voilet !important;
+    }
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.mat-ink-bar {
+  height: auto;
+  background: none !important;
+  &:after {
+    content: "";
+    height: 4px;
+    position: absolute;
+    background: $voilet;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+    bottom: 0;
+    width: 50px;
+  }
+}
+
+.dasboard-tab {
+  & .mat-tab-label {
+    opacity: 1;
+  }
+
+  & .mat-tab-label-active {
+    color: $voilet;
+  }
+
+  & .mat-ink-bar {
+    &:after {
+      width: 100% !important;
+    }
+  }
+}

@@ -1,0 +1,283 @@
+<div class="pl-sm pr-sm mb-3">
+  <h1 class="mb-2"><strong>Inventory Return/Disposal</strong></h1>
+  <p class="text-muted">
+    You can call offf or dispose off your available inventory by raising a
+    request
+  </p>
+</div>
+
+<div class="bdr-lg br-10 p-5 my-4">
+  <form [formGroup]="removalForm" (submit)="onSubmit($event)">
+    <div class="row">
+      <div class="col">
+        <h3 class="font-weight-bold">Request Type (please select one)</h3>
+        <div class="btn-group-toggle" data-toggle="buttons">
+          <label
+            class="btn border"
+            [ngClass]="{ active: +removalForm.value.return_type === 0 }"
+          >
+            <div class="d-flex">
+              <input type="radio" formControlName="return_type" value="0" />
+              <mat-icon class="defaultColor">fiber_manual_record</mat-icon>
+              <span class="ml-2">Inventory Return</span>
+            </div>
+          </label>
+          <label
+            class="btn border ml-3"
+            [ngClass]="{ active: +removalForm.value.return_type === 1 }"
+          >
+            <div class="d-flex">
+              <input type="radio" formControlName="return_type" value="1" />
+              <mat-icon class="defaultColor">fiber_manual_record</mat-icon>
+              <span class="ml-2">Inventory Dispose</span>
+            </div>
+          </label>
+        </div>
+        <hr />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h3 class="font-weight-bold">Select Fulfillment Center</h3>
+        <div class="btn-group-toggle mb-2" data-toggle="buttons">
+          <ng-container *ngFor="let location of (warehouseList | async)?.data">
+            <label
+              *ngIf="removeFlipkart(location.name)"
+              class="btn bdr-lg br-10 mr-3 position-relative px-4 locationCard"
+              [ngClass]="{ active: isSelected(location.warehouse_code) }"
+            >
+              <mat-icon class="position-absolute fcBtnIcon">{{
+                isSelected(location.warehouse_code)
+                  ? 'check_circle'
+                  : 'fiber_manual_record'
+              }}</mat-icon>
+              <br />
+              <input
+                type="radio"
+                formControlName="warehouse_code"
+                [value]="location.warehouse_code"
+              />
+              <div class="mb-3">
+                <mat-icon
+                  class="text-muted fcHomeIcon"
+                  [svgIcon]="getIcon(location.name)"
+                ></mat-icon>
+              </div>
+
+              {{ location.name.split(' ')[0] | titlecase }}
+            </label>
+          </ng-container>
+        </div>
+        <mat-error
+          *ngIf="
+            removalForm.controls['warehouse_code'].touched &&
+            removalForm.controls['warehouse_code'].invalid
+          "
+          class="text-red"
+          >Please select a warehouse</mat-error
+        >
+      </div>
+    </div>
+    <hr />
+
+    <h3 class="font-weight-bold">Select Inventory</h3>
+    <div class="row">
+      <div class="col-4">
+        <div class="input-group">
+          <div class="input-group-prepend d-block">
+            <span class="input-group-text bg-transparent border-right-0">
+              <mat-icon>search</mat-icon>
+            </span>
+          </div>
+          <input
+            type="text"
+            class="form-control border-left-0"
+            placeholder="Search by ASN ID"
+          />
+        </div>
+      </div>
+      <div class="col">
+        <button
+          [hidden]="!showDeleteAll"
+          mat-stroked-button
+          type="button"
+          class="text-red float-right border-danger"
+          (click)="clickDeleteAll()"
+        >
+          <mat-icon>delete_outline </mat-icon>
+          Remove All Inventory
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col my-3">
+        <div class="table-container bdr-lg br-10">
+          <!-- <form [formGroup]="inventoryForm" autocomplete="off"> -->
+          <ng-container
+            *ngIf="inventories.length; else zeroInventory"
+            formArrayName="inventory_data"
+          >
+            <table
+              mat-table
+              *ngIf="inventories.length"
+              [dataSource]="getDataSource()"
+              class="w-100 bg-transparent inventoryTable"
+            >
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [aria-label]="checkboxLabel()"
+                  >
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(element.value) : null"
+                    [checked]="selection.isSelected(element.value)"
+                    [aria-label]="checkboxLabel(element.value)"
+                  >
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sku">
+                <th mat-header-cell *matHeaderCellDef class="pl-4">SKU</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.get('sku').value }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef class="pl-3">
+                  Product Name
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.get('name').value }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="available_qty">
+                <th mat-header-cell *matHeaderCellDef>Available Quantity</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.get('available_qty').value }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="qc_failed_qty">
+                <th mat-header-cell *matHeaderCellDef>QC Failed Quantity</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.get('qc_failed_qty').value }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="remove_available_qty">
+                <th mat-header-cell *matHeaderCellDef class="text-center">
+                  Remove
+                </th>
+                <td mat-cell *matCellDef="let element" [formGroup]="element">
+                  <mat-form-field
+                    appearance="outline"
+                    class="fixInput input-product"
+                  >
+                    <input
+                      matInput
+                      type="number"
+                      formControlName="remove_available_qty"
+                      required
+                    />
+
+                    <mat-error
+                      *ngIf="element.get('remove_available_qty').invalid"
+                      >{{ removedAvailableQtyErr(element) }}</mat-error
+                    >
+                  </mat-form-field>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="remove_failed_qty">
+                <th mat-header-cell *matHeaderCellDef class="text-center">
+                  Remove
+                </th>
+                <td mat-cell *matCellDef="let element" [formGroup]="element">
+                  <mat-form-field
+                    appearance="outline"
+                    class="fixInput input-product"
+                  >
+                    <input
+                      matInput
+                      type="number"
+                      formControlName="remove_failed_qty"
+                      required
+                    />
+
+                    <mat-error
+                      *ngIf="element.get('remove_failed_qty').invalid"
+                      >{{ removeFailedQtyErr(element) }}</mat-error
+                    >
+                  </mat-form-field>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <button
+                    class="close float-none text-red"
+                    (click)="removeElement(i)"
+                    type="button"
+                    style="opacity: 1"
+                  >
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </ng-container>
+          <!-- </form> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <hr />
+        <h3 class="font-weight-bold">Reason for Disposal?</h3>
+        <mat-form-field appearance="outline" class="w-100">
+          <!-- <mat-label>Textarea</mat-label> -->
+          <textarea
+            matInput
+            formControlName="reason"
+            placeholder="What do you want us to dispose off your inventory?"
+            rows="5"
+          ></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <button
+      mat-stroked-button
+      class="btn-purple text-white py-1 px-5"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+
+<ng-template #zeroInventory>
+  <div
+    class="d-flex align-items-center justify-content-center"
+    style="height: 20vh"
+  >
+    <h2 class="text-muted font-weight-bold">No inventories found</h2>
+  </div>
+</ng-template>

@@ -1,0 +1,24 @@
+@import '../../../../../assets/scss/main.scss';
+
+.w-10rem {
+  min-width: 10rem;
+}
+
+.w-7rem {
+  min-width: 7rem;
+}
+
+.fixedWidth {
+  width: 17rem;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.svg-icon {
+  height: 1rem;
+  &.combo {
+    line-height: 14px;
+  }
+}
